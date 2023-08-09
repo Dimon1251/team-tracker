@@ -15,4 +15,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('{any?}', fn () => view('app'))->where('any', '.*');
 
-Route::get('/', [\App\Http\Controllers\AuthController::class, 'login']);
+//Route::get('/', [\App\Http\Controllers\AuthController::class, 'login']);
