@@ -15,4 +15,28 @@ class ProjectService
     {
     }
 
+    public function all(){
+        return $this->projectRepository->all();
+    }
+
+    public function find($id){
+        return $this->projectRepository->one($id);
+    }
+
+    public function create($data, $team_list){
+        $project = $this->projectRepository->create($data);
+        foreach ($team_list as $team){
+            $project->teams()->attach($team);
+        }
+
+    }
+
+    public function update($data, $id){
+        $this->projectRepository->update($data, $id);
+    }
+
+    public function delete($id){
+        $this->projectRepository->delete($id);
+    }
+
 }

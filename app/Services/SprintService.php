@@ -15,4 +15,24 @@ class SprintService
     {
     }
 
+    public function all(){
+        return $this->sprintRepository->all();
+    }
+
+    public function find($id){
+        return $this->sprintRepository->one($id);
+    }
+
+    public function create($data){
+        $this->sprintRepository->create($data);
+    }
+
+    public function update($data, $id){
+        $this->sprintRepository->update($data, $id);
+    }
+
+    public function delete($id){
+        $this->sprintRepository->delete($id);
+    }
+
 }
