@@ -1,9 +1,14 @@
 <template>
-    <router-view />
+    <div class="container">
+        <router-view/>
+    </div>
 </template>
 
 <script>
-    export default {
-
-    }
 </script>
+<style>
+    .container {
+        width: 100%;
+        min-height: 100vh;
+    }
+</style>
