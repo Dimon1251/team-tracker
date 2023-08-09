@@ -6,11 +6,13 @@
             <input class="form_input" type="email" placeholder="Email" />
             <h2>Password</h2>
             <input class="form_input" type="password" placeholder="Password" />
+            <h2>Confirm password</h2>
+            <input class="form_input" type="password" placeholder="Confirm password" />
             <div class="button">
-                <div>Login</div>
+                <div>Sign up</div>
             </div>
             <div class="link_container">
-                <router-link class="link" to="/signup">Sign up</router-link>
+                <router-link class="link" to="/login">Log in</router-link>
             </div>
         </div>
     </div>
@@ -59,7 +61,7 @@ h2 {
 .button {
     height: 40px;
     padding: 2px;
-    background: rgba(226,0,255, 1);
+    background: rgb(226,0,255);
     background: -moz-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
     background: -webkit-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
     background: linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
@@ -68,7 +70,6 @@ h2 {
     cursor: pointer;
     margin: 10px 0;
 }
-
 .button div {
     background-color: white;
     padding: 0 20px;
@@ -78,10 +79,6 @@ h2 {
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    user-select: none;
-}
-.button:active div {
-    background-color: rgba(255,255,255, 0.8);
 }
 .link_container {
     display: flex;
