@@ -21,7 +21,7 @@
                 <div class="email">
                     test@user.com
                 </div>
-                <div class="logout">
+                <div class="logout" @click="logout">
                     Logout
                 </div>
             </div>
@@ -134,6 +134,8 @@
 <script>
 
 import draggable from 'vuedraggable'
+import router from "../router/router.js";
+import store from "../store.js";
 export default {
     components: {
         draggable,
@@ -176,8 +178,12 @@ export default {
             };
         },
         log: function(evt) {
-            // window.console.log(evt);
             console.log('drop')
+        },
+        logout () {
+            localStorage.setItem('access_token', '');
+            this.$store.state.authorized = false;
+            router.push('/login');
         }
     }
 }
@@ -278,6 +284,9 @@ export default {
     width: 100%;
     text-align: end;
     color: gray;
+}
+.logout {
+    cursor: pointer;
 }
 
 </style>

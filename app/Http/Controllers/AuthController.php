@@ -41,7 +41,7 @@ class AuthController extends Controller
     }
 
     public function register(Request $request){
-        $data = ['name' => 'Dima', 'email' => 'test@corpsoft.io', 'password' => 'secret'];
+        $data = ['name' => 'Dima', 'email' => $request->email, 'password' => $request->password];
         $user = $this->userService->create($data);
         $token = JWTAuth::fromUser($user);
         return response()->json([

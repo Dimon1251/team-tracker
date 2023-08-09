@@ -7,18 +7,22 @@ const routes = [
     {
         path: '/',
         component: Home,
+        name: 'home'
     },
     {
         path: '/login',
-        component: Login
+        component: Login,
+        name: 'login'
     },
     {
         path: '/signup',
-        component: Signup
+        component: Signup,
+        name: 'signup'
     },
     {
-        path: '/dragable',
-        component: Dragable
+        path: '/:catchAll(.*)',
+        name: '404',
+        redirect: '/',
     },
 ];
 
