@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -37,5 +38,12 @@ class UserController extends Controller
 
     public function removeFromTeam(Request $request){
         $this->userService->removeFromTeam($request->user_id);
+    }
+
+    public function selfUser(){
+        $user = $this->userService->find(Auth::id());
+        return response()->json([
+            'User' => $user,
+        ]);
     }
 }
