@@ -15,4 +15,28 @@ class TicketService
     {
     }
 
+    public function all(){
+        return $this->ticketRepository->all();
+    }
+
+    public function find($id){
+        return $this->ticketRepository->one($id);
+    }
+
+    public function create($data){
+        $this->ticketRepository->create($data);
+    }
+
+    public function update($data, $id){
+        $this->ticketRepository->update($data, $id);
+    }
+
+    public function delete($id){
+        $this->ticketRepository->delete($id);
+    }
+
+ /*   public function assignUser($ticket_id, $assign, $assigned){
+        $this->ticketRepository->assignUser($ticket_id, $assign, $assigned);
+    }*/
+
 }

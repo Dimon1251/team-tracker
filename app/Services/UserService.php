@@ -16,9 +16,33 @@ class UserService
     {
     }
 
+    public function all(){
+        return $this->userRepository->all();
+    }
+
+    public function find($id){
+        return $this->userRepository->one($id);
+    }
+
     public function create($data){
         $data['password'] = Hash::make($data['password']);
         return $this->userRepository->create($data);
+    }
+
+    public function update($data, $id){
+        $this->userRepository->update($data, $id);
+    }
+
+    public function delete($id){
+        $this->userRepository->delete($id);
+    }
+
+    public function addToTeam($user_id, $team_id){
+        $this->userRepository->addToTeam($user_id, $team_id);
+    }
+
+    public function removeFromTeam($user_id){
+        $this->userRepository->removeFromTeam($user_id);
     }
 
 }

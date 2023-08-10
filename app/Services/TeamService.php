@@ -15,4 +15,24 @@ class TeamService
     {
     }
 
+    public function all(){
+        return $this->teamRepository->all();
+    }
+
+    public function find($id){
+        return $this->teamRepository->one($id);
+    }
+
+    public function create($data){
+        $this->teamRepository->create($data);
+    }
+
+    public function update($data, $id){
+        $this->teamRepository->update($data, $id);
+    }
+
+    public function delete($id){
+        $this->teamRepository->delete($id);
+    }
+
 }
