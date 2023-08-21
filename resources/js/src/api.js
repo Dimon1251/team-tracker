@@ -18,32 +18,33 @@ api.interceptors.response.use( config => {
     }
     return config
 }, error => {
-    if (error.response.data.detail === 'Token expired') {
-        return axios.get('http://46.150.0.33:5050/api/refresh_token', {
-            headers: {
-                'authorization' : `Bearer ${localStorage.getItem('refresh_token')}`
-            }
-        }).then( response => {
-            if (response.data.status === 'success') {
-                localStorage.setItem('access_token', response.data.authorisation.token);
-                if (localStorage.getItem('access_token')) {
-                    store.state.authorized = true;
-                }
-            } else {
-                store.state.authorized = false;
-                localStorage.setItem('access_token', '');
-            }
-        }).catch(error => {
-            if (error.response.data.detail === 'Refresh token expired') {
-                store.state.authorized = false;
-                localStorage.setItem('access_token', '');
-                localStorage.setItem('refresh_token', '');
-            }
-        });
-    } else {
-        store.state.authorized = false;
-        localStorage.setItem('access_token', '');
-    }
+    console.log(error)
+    // if (error.response.data.detail === 'Token expired') {
+    //     return axios.get('http://46.150.0.33:5050/api/refresh_token', {
+    //         headers: {
+    //             'authorization' : `Bearer ${localStorage.getItem('refresh_token')}`
+    //         }
+    //     }).then( response => {
+    //         if (response.data.status === 'success') {
+    //             localStorage.setItem('access_token', response.data.authorisation.token);
+    //             if (localStorage.getItem('access_token')) {
+    //                 store.state.authorized = true;
+    //             }
+    //         } else {
+    //             store.state.authorized = false;
+    //             localStorage.setItem('access_token', '');
+    //         }
+    //     }).catch(error => {
+    //         if (error.response.data.detail === 'Refresh token expired') {
+    //             store.state.authorized = false;
+    //             localStorage.setItem('access_token', '');
+    //             localStorage.setItem('refresh_token', '');
+    //         }
+    //     });
+    // } else {
+    //     store.state.authorized = false;
+    //     localStorage.setItem('access_token', '');
+    // }
 });
 
 export default api;

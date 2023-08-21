@@ -1,13 +1,18 @@
-import Home from "../pages/Home.vue";
 import Login from "../pages/Login.vue";
 import Signup from "../pages/Signup.vue";
-import Dragable from "../pages/Dragable.vue";
+import Settings from "../pages/Settings.vue";
+import Home from "../pages/Home.vue";
 
 const routes = [
     {
         path: '/',
         component: Home,
         name: 'home'
+    },
+    {
+        path: '/settings',
+        component: Settings,
+        name: 'settings'
     },
     {
         path: '/login',

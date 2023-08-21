@@ -15,7 +15,7 @@ router.beforeEach( (to, from, next) => {
             })
         }
     }
-    if (to.name === 'home' && !accessToken) {
+    if ((to.name === 'home' || to.name === 'settings') && !accessToken) {
         return next({
             name: 'login'
         })
