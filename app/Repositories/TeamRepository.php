@@ -11,4 +11,8 @@ class TeamRepository extends Repository
         parent::__construct($model);
     }
 
+    public function allByUser($id){
+        return Team::where()
+    }
+
 }

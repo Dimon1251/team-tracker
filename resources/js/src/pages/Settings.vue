@@ -58,17 +58,19 @@
     </div>
 
 </template>
-
 <script>
 
 import api from "../api.js";
 import headerPanel from "../components/Header-panel.vue";
+import {inject} from 'vue'
+
 export default {
     components: {
         headerPanel
     },
     data() {
         return {
+            LoginUser: inject('LoginUser'),
             tabs: {
                 teams: true,
                 projects: false,
@@ -83,16 +85,16 @@ export default {
     methods: {
         saveNewTeam() {
             if (this.newTeam.trim().length > 0) {
-                api.post('api/team/create', { name: this.newTeam })
+                api.post('api/team/create', { name: this.newTeam, user_creator: this.LoginUser.Id })
                     .then(response => {
                         //
                     });
                 this.newTeam = null;
                 this.showAllTeams();
-            };
+            }
         },
         showAllTeams() {
-            api.get('api/team/index')
+            api.post('api/team/show', {id: this.LoginUser.Id })
                 .then(response => {
                     this.teams = response.data.Teams;
                 });
@@ -143,6 +145,8 @@ export default {
         //
     }
 }
+
+
 </script>
 
 <style>

@@ -13,6 +13,9 @@ class Team extends Model
         'name'
     ];
 
+    protected $with = ['users'];
+
+
     public function projects(){
         return $this->belongsToMany(Project::class, 'team_project', 'team_id', 'project_id');
     }

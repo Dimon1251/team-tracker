@@ -32,10 +32,14 @@ class AuthController extends Controller
         }
 
         $token = JWTAuth::fromUser(Auth::user());
-
+        $user = Auth::user();
         return response()->json([
-            'success' => true,
+            'status' => 'success',
             'token' => $token,
+            'user' => [
+                'Name' => $user->name,
+                'Id' => $user->id,
+            ],
         ]);
 
     }
@@ -46,12 +50,11 @@ class AuthController extends Controller
         $token = JWTAuth::fromUser($user);
         return response()->json([
             'status' => 'success',
-            'message' => 'User created successfully',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
+            'token' => $token,
+            'user' => [
+                'Name' => $user->name,
+                'Id' => $user->id,
+            ],
         ]);
     }
 
