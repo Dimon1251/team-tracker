@@ -3,12 +3,12 @@
         <div class="card">
             <h1>TeamTracker</h1>
             <h2>Email</h2>
-            <input class="form_input" type="email" placeholder="Email" />
+            <input class="form_input" type="email" placeholder="Email" v-model="email" />
             <h2>Password</h2>
-            <input class="form_input" type="password" placeholder="Password" />
+            <input class="form_input" type="password" placeholder="Password" v-model="password" />
             <h2>Confirm password</h2>
             <input class="form_input" type="password" placeholder="Confirm password" />
-            <div class="button">
+            <div class="button" @click="signUp">
                 <div>Sign up</div>
             </div>
             <div class="link_container">
@@ -19,8 +19,32 @@
 </template>
 
 <script>
+import router from "../router/router.js";
+import axios from "axios";
 export default {
-
+    data: function () {
+        return {
+            email: 'example@test.com',
+            password: 'secret123',
+        }
+    },
+    methods: {
+        signUp() {
+            axios.post('api/register', {
+                email: this.email,
+                password: this.password,
+            }).then( response => {
+                if (response.data.status === 'success') {
+                    localStorage.setItem('access_token', response.data.authorisation.token);
+                    // localStorage.setItem('refresh_token', response.data.refresh_token);
+                    if (localStorage.getItem('access_token')){
+                        this.$store.state.authorized = true;
+                        router.push('/');
+                    }
+                }
+            })
+        },
+    }
 }
 </script>
 <style>

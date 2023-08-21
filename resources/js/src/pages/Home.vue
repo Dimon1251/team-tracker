@@ -1,32 +1,7 @@
 <template>
-    <header class="header">
-        <div class="logo">
-            TeamTracker
-        </div>
-        <div class="buttons">
-            <div class="nav">
-                <ul>
-                    <li>
-                        <span>Projects</span>
-                    </li>
-                    <li>
-                        <span>My tasks</span>
-                    </li>
-                    <li>
-                        <span>Settings</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="user">
-                <div class="email">
-                    test@user.com
-                </div>
-                <div class="logout">
-                    Logout
-                </div>
-            </div>
-        </div>
-    </header>
+
+    <headerPanel></headerPanel>
+
     <div class="info">
 
     </div>
@@ -134,9 +109,12 @@
 <script>
 
 import draggable from 'vuedraggable'
+import api from "../api.js";
+import headerPanel from "../components/Header-panel.vue";
 export default {
     components: {
         draggable,
+        headerPanel
     },
     data() {
         return {
@@ -160,7 +138,8 @@ export default {
                 { name: "test4", id: 11 },
                 { name: "test5", id: 12 },
                 { name: "test6", id: 13 }
-            ]
+            ],
+            // name: null
         }
     },
     methods: {
@@ -176,9 +155,34 @@ export default {
             };
         },
         log: function(evt) {
-            // window.console.log(evt);
             console.log('drop')
+        },
+        logout () {
+            localStorage.setItem('access_token', '');
+            this.$store.state.authorized = false;
+            router.push('/login');
+        },
+        getAccessToken(){
+            if(localStorage.getItem('access_token')) {
+                this.$store.state.authorized = true;
+            } else {
+                this.$store.state.authorized = false;
+            }
+        },
+        getUserData() {
+            if (localStorage.getItem('access_token')) {
+                api.get('api/user/auth')
+                    .then( response => {
+                        this.name = response.data.User.name;
+                    })
+            }
         }
+    },
+    mounted() {
+        // this.getUserData();
+    },
+    updated() {
+        // this.getUserData();
     }
 }
 </script>
@@ -207,6 +211,9 @@ export default {
     flex-direction: row;
     gap: 15px;
 }
+.nav ul li {
+    cursor: pointer;
+}
 .logo {
     font-size: 24px;
     font-weight: 600;
@@ -214,7 +221,7 @@ export default {
     padding-top: 3px;
     user-select: none;
 }
-.email {
+.name {
     color: gray;
     margin-right: 20px;
 }
@@ -278,6 +285,9 @@ export default {
     width: 100%;
     text-align: end;
     color: gray;
+}
+.logout {
+    cursor: pointer;
 }
 
 </style>
