@@ -41,6 +41,9 @@ export default {
                         router.push('/');
                     }
                 }
+                if (response.status === 422){
+                    console.log("Invalid data");
+                }
             })
         },
     }

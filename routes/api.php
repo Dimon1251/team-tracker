@@ -37,8 +37,8 @@ Route::middleware('jwt.auth')->group(function () {
         Route::post('/show', [UserController::class, 'show'])->name('show');
         Route::post('/update', [UserController::class, 'update'])->name('update');
         Route::post('/destroy', [UserController::class, 'destroy'])->name('destroy');
-        Route::post('/addToTeam', [UserController::class, 'addToTeam'])->name('addToTeam');
-        Route::post('/removeFromTeam', [UserController::class, 'removeFromTeam'])->name('removeFromTeam');
+        Route::post('/addToTeam', [UserController::class, 'addToTeam'])->name('addToTeam'); //ready
+        Route::post('/removeFromTeam', [UserController::class, 'removeFromTeam'])->name('removeFromTeam'); //ready
         Route::get('/auth', [UserController::class, 'selfUser'])->name('auth');
 
     });
@@ -66,10 +66,10 @@ Route::middleware('jwt.auth')->group(function () {
     Route::prefix('/team')->name('team.')->group(function () {
 
         Route::get('/index', [TeamController::class, 'index'])->name('index');
-        Route::post('/show', [TeamController::class, 'show'])->name('show');
-        Route::post('/create', [TeamController::class, 'create'])->name('create');
-        Route::post('/update', [TeamController::class, 'update'])->name('update');
-        Route::post('/destroy', [TeamController::class, 'destroy'])->name('destroy');
+        Route::post('/show', [TeamController::class, 'show'])->name('show'); //ready
+        Route::post('/create', [TeamController::class, 'create'])->name('create');  //ready
+        Route::post('/update', [TeamController::class, 'update'])->name('update');  //ready
+        Route::post('/destroy', [TeamController::class, 'destroy'])->name('destroy'); //ready
 
     });
 

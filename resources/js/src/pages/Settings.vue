@@ -58,7 +58,6 @@
     </div>
 
 </template>
-
 <script>
 
 import api from "../api.js";
@@ -89,12 +88,13 @@ export default {
                     });
                 this.newTeam = null;
                 this.showAllTeams();
-            };
+            }
         },
         showAllTeams() {
             api.get('api/team/index')
                 .then(response => {
                     this.teams = response.data.Teams;
+                    console.log(this.teams);
                 });
         },
         deleteTeam(id) {
@@ -143,6 +143,8 @@ export default {
         //
     }
 }
+
+
 </script>
 
 <style>

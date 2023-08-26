@@ -10,13 +10,17 @@ class Team extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name'
+        'name',
+        'user_creator'
     ];
+
+    protected $with = ['users'];
+
 
     public function projects(){
         return $this->belongsToMany(Project::class, 'team_project', 'team_id', 'project_id');
     }
     public function users(){
-        return $this->hasMany(User::class, 'team_id');
+        return $this->belongsToMany(User::class, 'user_team', 'team_id', 'user_id');
     }
 }

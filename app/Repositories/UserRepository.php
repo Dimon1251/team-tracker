@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Team;
 use App\Models\User;
 
 class UserRepository extends Repository
@@ -12,15 +13,12 @@ class UserRepository extends Repository
     }
 
     public function addToTeam($user_id, $team_id){
-        User::where('id', $user_id)->update([
-            'team_id' => $team_id
-        ]);
+        Team::where('id', $team_id)->first()->users()->attach($user_id);
     }
 
-    public function removeFromTeam($user_id){
-        User::where('id', $user_id)->update([
-            'team_id' => null
-        ]);
+    public function removeFromTeam($user_id, $team_id){
+        Team::where('id', $team_id)->first()->users()->detach($user_id);
+
     }
 
 }

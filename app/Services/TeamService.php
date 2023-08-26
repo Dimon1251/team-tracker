@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\TeamRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -11,12 +12,21 @@ use Illuminate\Support\Facades\Storage;
 class TeamService
 {
 
-    public function __construct(private readonly TeamRepository $teamRepository)
+    public function __construct(private readonly TeamRepository $teamRepository,
+                                private readonly UserRepository $userRepository)
     {
     }
 
     public function all(){
-        return $this->teamRepository->all();
+        $teams = $this->teamRepository->allByUser(Auth::id());
+        foreach ($teams as $team){
+            if ($team->user_creator == Auth::id()){
+                $team->status = "owner";
+            } else {
+                $team->status = "member";
+            }
+        }
+        return $teams;
     }
 
     public function find($id){
@@ -24,7 +34,9 @@ class TeamService
     }
 
     public function create($data){
-        $this->teamRepository->create($data);
+        $data['user_creator'] = Auth::id();
+        $team = $this->teamRepository->create($data);
+        $team->users()->attach($data['user_creator']);
     }
 
     public function update($data, $id){

@@ -22,6 +22,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'team_id',
     ];
 
     /**
@@ -44,8 +45,9 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
-    public function team(){
-        return $this->belongsTo(Team::class);
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'user_team', 'user_id', 'team_id');
     }
 
     public function getJWTIdentifier()
