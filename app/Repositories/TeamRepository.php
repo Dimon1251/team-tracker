@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Team;
+use App\Models\User;
 
 class TeamRepository extends Repository
 {
@@ -12,7 +13,7 @@ class TeamRepository extends Repository
     }
 
     public function allByUser($id){
-        return Team::where()
+        return User::where('id', $id)->first()->teams;
     }
 
 }

@@ -35,13 +35,14 @@ export default {
             }).then( response => {
                 if (response.status === 200) {
                     localStorage.setItem('access_token', response.data.token);
-                    localStorage.setItem('LoginUser', JSON.stringify(response.data.user));
-
                     // localStorage.setItem('refresh_token', response.data.refresh_token);
                     if (localStorage.getItem('access_token')){
                         this.$store.state.authorized = true;
                         router.push('/');
                     }
+                }
+                if (response.status === 422){
+                    console.log("Invalid data");
                 }
             })
         },

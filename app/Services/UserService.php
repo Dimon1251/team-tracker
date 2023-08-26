@@ -41,8 +41,8 @@ class UserService
         $this->userRepository->addToTeam($user_id, $team_id);
     }
 
-    public function removeFromTeam($user_id){
-        $this->userRepository->removeFromTeam($user_id);
+    public function removeFromTeam($user_id, $team_id){
+        $this->userRepository->removeFromTeam($user_id, $team_id);
     }
 
 }

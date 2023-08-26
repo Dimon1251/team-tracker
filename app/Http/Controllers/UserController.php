@@ -37,7 +37,7 @@ class UserController extends Controller
     }
 
     public function removeFromTeam(Request $request){
-        $this->userService->removeFromTeam($request->user_id);
+        $this->userService->removeFromTeam($request->user_id, $request->team_id);
     }
 
     public function selfUser(){
