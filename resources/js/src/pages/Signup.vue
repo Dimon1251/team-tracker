@@ -35,10 +35,7 @@ export default {
                 password: this.password,
             }).then( response => {
                 if (response.data.status === 'success') {
-                    console.log(response.data);
-                    localStorage.setItem('access_token', response.data.token);
-                    localStorage.setItem('LoginUser', JSON.stringify(response.data.user));
-
+                        localStorage.setItem('access_token', response.data.token);
                     // localStorage.setItem('refresh_token', response.data.refresh_token);
                     if (localStorage.getItem('access_token')){
                         this.$store.state.authorized = true;
