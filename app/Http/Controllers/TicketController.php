@@ -16,6 +16,13 @@ class TicketController extends Controller
         ]);
     }
 
+    public function indexBySprint(Request $request){
+        $tickets = $this->ticketService->allBySprint($request->id);
+        return response()->json([
+            'Tickets' => $tickets,
+        ]);
+    }
+
     public function show(Request $request){
         $ticket = $this->ticketService->find($request->id);
         return response()->json([
