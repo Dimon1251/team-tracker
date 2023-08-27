@@ -76,6 +76,7 @@ Route::middleware('jwt.auth')->group(function () {
     Route::prefix('/ticket')->name('ticket.')->group(function () {
 
         Route::get('/index', [TicketController::class, 'index'])->name('index');
+        Route::post('/index-sprint', [TicketController::class, 'indexBySprint'])->name('indexBySprint');
         Route::post('/show', [TicketController::class, 'show'])->name('show');
         Route::post('/create', [TicketController::class, 'create'])->name('create');
         Route::post('/update', [TicketController::class, 'update'])->name('update');

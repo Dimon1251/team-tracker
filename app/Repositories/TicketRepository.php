@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Sprint;
 use App\Models\Ticket;
 
 class TicketRepository extends Repository
@@ -17,5 +18,9 @@ class TicketRepository extends Repository
             'assigned_user_id' => $assigned
         ]);
     }*/
+
+    public function allBySprint($id){
+        return Sprint::where('id', $id)->first()->tickets;
+    }
 
 }

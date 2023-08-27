@@ -39,4 +39,8 @@ class TicketService
         $this->ticketRepository->assignUser($ticket_id, $assign, $assigned);
     }*/
 
+    public function allBySprint($id){
+        return $this->ticketRepository->allBySprint($id);
+    }
+
 }
