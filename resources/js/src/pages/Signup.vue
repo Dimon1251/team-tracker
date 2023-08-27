@@ -40,7 +40,7 @@ export default {
                 password: this.password,
                 password_confirmation: this.confirmPassword
             }).then( response => {
-                console.log('ot');
+                localStorage.setItem('access_token', response.data.token);
                 if (response.status === 200) {
                     localStorage.setItem('access_token', response.data.token);
                     // localStorage.setItem('refresh_token', response.data.refresh_token);
