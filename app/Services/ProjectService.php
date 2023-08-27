@@ -16,7 +16,7 @@ class ProjectService
     }
 
     public function all(){
-        return $this->projectRepository->all();
+        return $this->projectRepository->allByUser(Auth::id());
     }
 
     public function find($id){
@@ -24,7 +24,7 @@ class ProjectService
     }
 
     public function create($data, $team_list){
-        $project = $this->projectRepository->create($data);
+        $project = $this->projectRepository->create(['name' => $data]);
         foreach ($team_list as $team){
             $project->teams()->attach($team);
         }
