@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserLoginRequest;
+use App\Http\Requests\UserRegisterRequest;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,45 +19,37 @@ class AuthController extends Controller
 
 
 
-    public function login(Request $request)
+    public function login(UserLoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-        $credentials = $request->only('email', 'password');
-        if (!Auth::attempt($credentials)) {
+        if (!Auth::attempt($request->toArray())) {
             return response()->json([
-                'success' => false,
                 'message' => 'Invalid credentials.',
-            ]);
+            ], 422);
         }
 
         $token = JWTAuth::fromUser(Auth::user());
         $user = Auth::user();
         return response()->json([
-            'status' => 'success',
+            'status' => true,
             'token' => $token,
             'user' => [
                 'Name' => $user->name,
                 'Id' => $user->id,
             ],
-        ]);
+        ], 200);
 
     }
 
-    public function register(Request $request){
-        $data = ['name' => 'Dima', 'email' => $request->email, 'password' => $request->password];
-        $user = $this->userService->create($data);
+    public function register(UserRegisterRequest $request){
+        $user = $this->userService->create($request->except('password_confirmation'));
         $token = JWTAuth::fromUser($user);
         return response()->json([
-            'status' => 'success',
             'token' => $token,
             'user' => [
                 'Name' => $user->name,
                 'Id' => $user->id,
             ],
-        ]);
+        ], 200);
     }
 
     public function logout()

@@ -82,7 +82,7 @@ export default {
     methods: {
         saveNewTeam() {
             if (this.newTeam.trim().length > 0) {
-                api.post('api/team/create', { name: this.newTeam})
+                api.post('api/team/create', { name: this.newTeam })
                     .then(response => {
                         //
                     });
@@ -91,9 +91,10 @@ export default {
         }
         },
         showAllTeams() {
-            api.post('api/team/show')
+            api.get('api/team/index')
                 .then(response => {
                     this.teams = response.data.Teams;
+                    console.log(this.teams);
                 });
         },
         deleteTeam(id) {

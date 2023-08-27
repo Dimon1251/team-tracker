@@ -18,7 +18,15 @@ class TeamService
     }
 
     public function all(){
-        return $this->teamRepository->all();
+        $teams = $this->teamRepository->allByUser(Auth::id());
+        foreach ($teams as $team){
+            if ($team->user_creator == Auth::id()){
+                $team->status = "owner";
+            } else {
+                $team->status = "member";
+            }
+        }
+        return $teams;
     }
 
     public function find($id){
@@ -26,8 +34,9 @@ class TeamService
     }
 
     public function create($data){
-        $team = $this->teamRepository->create(['name' => $data['name'], 'user_creator' => $data['user_creator']]);
-        $this->userRepository->update(['team_id' => $team->id], $data['user_id']);
+        $data['user_creator'] = Auth::id();
+        $team = $this->teamRepository->create($data);
+        $team->users()->attach($data['user_creator']);
     }
 
     public function update($data, $id){
