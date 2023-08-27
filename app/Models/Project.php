@@ -13,6 +13,8 @@ class Project extends Model
         'name',
     ];
 
+    protected $with = ['sprints'];
+
     public function teams(){
         return $this->belongsToMany(Team::class, 'team_project', 'project_id', 'team_id');
     }
