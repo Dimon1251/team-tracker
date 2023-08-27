@@ -32,6 +32,10 @@
                         </select>
                         <button @click="addUserToTeam(team.id, team.selectedOption)">Add user</button>
 
+                        <div v-for="user of team.users">
+                            <input class="user_of_team" type="text" v-model="user.email">
+                            <button @click="removeUserFormTeam(user.id, team.id)">Delete</button>
+                        </div>
 
                     </div>
                 </div>
@@ -39,16 +43,57 @@
 
             <div v-if="tabs.projects">
                 <h2>Projects</h2>
+                <input v-model="newProject" type="text">
+                <select v-model="addNewTeam">
+                    <option v-for="team in teams" :key="team.id" :value="team.id">{{ team.name }}</option>
+                </select>
+                <button @click="addTeamToProject">add</button>
+                <button @click="saveNewProject">Save</button>
+
+                <div v-for="team of newTeamList">
+                    <div>{{ team }}</div>
+                </div>
+
+                <div v-for="project of projects">
+                    <div>{{ project.name }}</div>
+                </div>
 
             </div>
 
             <div v-if="tabs.sprints">
                 <h2>Sprints</h2>
+                <input type="text" v-model="newSprint">
+                <select v-model="project" style="min-width: 300px">
+                    <option v-for="project in projects" :key="project.id" :value="project.id">{{ project.name }}</option>
+                </select>
 
+                <input type="date" v-model="startDate">
+                <input type="date" v-model="endDate">
+                <button @click="saveNewSprint">Save</button>
             </div>
 
             <div v-if="tabs.tickets">
                 <h2>Tickets</h2>
+                <div>
+                    <select v-model="projectForSprint">
+                        <option v-for="project in projects" :key="project.id" :value="project">{{ project.name }}</option>
+                    </select>
+                </div>
+                <div v-if="projectForSprint">
+                    <select v-model="currentSprint">
+                        <option v-for="sprint in projectForSprint.sprints" :key="sprint.id" :value="sprint.id">{{ sprint.name }}</option>
+                    </select>
+                </div>
+
+                <div>Name:</div>
+                <input type="text" v-model="newTicketName">
+                <div>Description:</div>
+                <input type="text" v-model="newTicketDescription">
+                <div>Estimation:</div>
+                <input type="number" v-model="newTicketEstimation">
+                <button @click="addNewTicket">Add</button>
+
+<!--                <div v-for="ticket of currentSprint.tickets">{{ ticket.name }}</div>-->
 
             </div>
 
@@ -75,8 +120,23 @@ export default {
                 tickets: false
             },
             newTeam: null,
+            newProject: null,
             teams: [],
-            users: []
+            users: [],
+            addNewTeam: null,
+            newTeamList: [],
+            allProjects: null,
+            projects: [],
+            newSprint: null,
+            project: null,
+            startDate: null,
+            endDate: null,
+            sprints: [],
+            projectForSprint: null,
+            currentSprint: null,
+            newTicketName: null,
+            newTicketDescription: null,
+            newTicketEstimation: 0
         }
     },
     methods: {
@@ -88,13 +148,12 @@ export default {
                     });
                 this.newTeam = null;
                 this.showAllTeams();
-        }
+            }
         },
         showAllTeams() {
-            api.get('api/team/index')
+        api.get('api/team/index')
                 .then(response => {
                     this.teams = response.data.Teams;
-                    console.log(this.teams);
                 });
         },
         deleteTeam(id) {
@@ -118,7 +177,6 @@ export default {
                 });
         },
         addUserToTeam(teamId, userId) {
-            console.log(teamId, userId);
             api.post('api/user/addToTeam', { user_id: userId, team_id: teamId })
                 .then(response => {
                     //
@@ -133,11 +191,63 @@ export default {
                     this.tabs[key] = false;
                 }
             };
+        },
+        removeUserFormTeam(userId, teamId) {
+            api.post('api/user/removeFromTeam', { user_id: userId, team_id: teamId })
+                .then(response => {
+                    //
+                });
+            this.showAllTeams();
+        },
+        addTeamToProject() {
+            this.newTeamList.push((this.addNewTeam));
+        },
+        saveNewProject() {
+            api.post('api/project/create', { name: this.newProject, team_list: this.newTeamList })
+                .then(response => {
+                    //
+                });
+            this.newProject = null;
+            this.newTeamList = [];
+
+            this.showAllProjects();
+        },
+        showAllProjects() {
+            api.get('api/project/index')
+                .then(response => {
+                    this.projects = response.data.Projects;
+                    console.log(this.projects)
+                });
+        },
+        saveNewSprint() {
+            api.post('api/sprint/create', { name: this.newSprint, project_id: this.project, start_date: this.startDate, end_date: this.endDate })
+                .then(response => {
+                    //
+                });
+            this.newSprint = null;
+            this.project = null;
+            this.startDate = null;
+            this.endDate = null;
+
+            this.showAllProjects();
+        },
+        addNewTicket() {
+            api.post('api/ticket/create', { name: this.newTicketName, sprint_id: this.currentSprint.id, estimation: this.newTicketEstimation, description: this.newTicketDescription })
+                .then(response => {
+                    //
+                });
+            this.newSprint = null;
+            this.project = null;
+            this.startDate = null;
+
+            this.showAllProjects();
         }
+
     },
     mounted() {
         this.showAllTeams();
         this.getAllUsers();
+        this.showAllProjects();
     },
     updated() {
         //
@@ -312,6 +422,9 @@ export default {
 
 .teams_list input {
     color: black;
+}
+.user_of_team {
+    margin-left: 10px;
 }
 
 

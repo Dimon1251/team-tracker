@@ -3,7 +3,12 @@
     <headerPanel></headerPanel>
 
     <div class="info">
-
+        <div class="info_project">
+            Project / Sprint
+        </div>
+        <div class="info_team">
+            Team: Team name
+        </div>
     </div>
 
     <div class="board">
@@ -288,6 +293,15 @@ export default {
 }
 .logout {
     cursor: pointer;
+}
+
+.info_project {
+    font-size: 24px;
+}
+
+.info_team {
+    font-size: 16px;
+    margin-top: 12px;
 }
 
 </style>

@@ -18,7 +18,11 @@ class ProjectRepository extends Repository
         foreach ($teams as $team){
             $projects[] = $team->projects;
         }
-        return $projects;
+        $uniqueElements = collect($projects)
+            ->flatten() // Преобразовать в одномерный массив
+            ->unique('id')   // Удалить повторяющиеся элементы
+            ->values();   // Переиндексировать массив
+        return $uniqueElements->all();
     }
 
 }
