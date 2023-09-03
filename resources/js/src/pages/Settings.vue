@@ -70,17 +70,29 @@
                 <input type="date" v-model="startDate">
                 <input type="date" v-model="endDate">
                 <button @click="saveNewSprint">Save</button>
+
+
+                <div>
+                    <div v-for="project of projects">
+                        <h3>Project: {{ project.name }}</h3>
+                        <p v-for="sprint of project.sprints" style="margin-left: 10px">{{sprint.name}}</p>
+                    </div>
+                </div>
             </div>
 
             <div v-if="tabs.tickets">
                 <h2>Tickets</h2>
                 <div>
+                    Choose project:
+
                     <select v-model="projectForSprint">
                         <option v-for="project in projects" :key="project.id" :value="project">{{ project.name }}</option>
                     </select>
                 </div>
                 <div v-if="projectForSprint">
-                    <select v-model="currentSprint">
+                    Choose sprint:
+
+                    <select v-model="currentSprint" @change="getTickets">
                         <option v-for="sprint in projectForSprint.sprints" :key="sprint.id" :value="sprint.id">{{ sprint.name }}</option>
                     </select>
                 </div>
@@ -136,7 +148,8 @@ export default {
             currentSprint: null,
             newTicketName: null,
             newTicketDescription: null,
-            newTicketEstimation: 0
+            newTicketEstimation: 0,
+            ticketsOfCurrentProject: []
         }
     },
     methods: {
@@ -216,11 +229,24 @@ export default {
             api.get('api/project/index')
                 .then(response => {
                     this.projects = response.data.Projects;
-                    console.log(this.projects)
+                    // console.log(this.projects)
+                });
+        },
+        showCurrentProject(sprint_id) {
+            api.get('api/ticket/index-sprint', { id: sprint_id })
+                .then(response => {
+                    this.ticketsOfCurrentProject = response.data.Tickets;
+                    console.log(response);
+                    console.log(this.ticketsOfCurrentProject);
                 });
         },
         saveNewSprint() {
-            api.post('api/sprint/create', { name: this.newSprint, project_id: this.project, start_date: this.startDate, end_date: this.endDate })
+            api.post('api/sprint/create', {
+                name: this.newSprint,
+                project_id: this.project,
+                start_date: this.startDate,
+                end_date: this.endDate
+            })
                 .then(response => {
                     //
                 });
@@ -230,9 +256,15 @@ export default {
             this.endDate = null;
 
             this.showAllProjects();
+
         },
         addNewTicket() {
-            api.post('api/ticket/create', { name: this.newTicketName, sprint_id: this.currentSprint.id, estimation: this.newTicketEstimation, description: this.newTicketDescription })
+            api.post('api/ticket/create', {
+                name: this.newTicketName,
+                sprint_id: this.currentSprint.id,
+                estimation: this.newTicketEstimation,
+                description: this.newTicketDescription
+            })
                 .then(response => {
                     //
                 });
@@ -240,7 +272,12 @@ export default {
             this.project = null;
             this.startDate = null;
 
-            this.showAllProjects();
+            this.showCurrentProject(this.currentSprint.id);
+        },
+        getTickets() {
+            if (this.currentSprint) {
+                this.showCurrentProject(this.currentSprint.id);
+            }
         }
 
     },
