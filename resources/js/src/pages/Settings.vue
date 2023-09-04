@@ -233,7 +233,8 @@ export default {
                 });
         },
         showCurrentProject(sprint_id) {
-            api.get('api/ticket/index-sprint', { id: sprint_id })
+            console.log(sprint_id)
+            api.post('api/ticket/index-sprint', { id: sprint_id })
                 .then(response => {
                     this.ticketsOfCurrentProject = response.data.Tickets;
                     console.log(response);
@@ -261,7 +262,7 @@ export default {
         addNewTicket() {
             api.post('api/ticket/create', {
                 name: this.newTicketName,
-                sprint_id: this.currentSprint.id,
+                sprint_id: this.currentSprint,
                 estimation: this.newTicketEstimation,
                 description: this.newTicketDescription
             })
@@ -272,11 +273,11 @@ export default {
             this.project = null;
             this.startDate = null;
 
-            this.showCurrentProject(this.currentSprint.id);
+            this.showCurrentProject(this.currentSprint);
         },
         getTickets() {
             if (this.currentSprint) {
-                this.showCurrentProject(this.currentSprint.id);
+                this.showCurrentProject(this.currentSprint);
             }
         }
 

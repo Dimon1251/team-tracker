@@ -28,8 +28,8 @@ export default {
         return {
             email: 'example@test.com',
             name: 'Admin',
-            password: 'secret123',
-            confirmPassword: 'secret123',
+            password: 'example@test.com',
+            confirmPassword: 'example@test.com',
         }
     },
     methods: {
