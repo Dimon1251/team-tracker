@@ -18,7 +18,7 @@
                     class="list-group"
                     :list="todo"
                     group="people"
-                    @change="log"
+                    @change="updateTickets('todo')"
                     itemKey="name"
                 >
                     <template #item="{ element, index }">
@@ -32,6 +32,8 @@
                                     Assigned to: User
                                 </span>
                             </div>
+                            <div>Status: {{ element.status }}</div>
+                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
@@ -42,7 +44,7 @@
                     class="list-group"
                     :list="inprogress"
                     group="people"
-                    @change="log"
+                    @change="updateTickets('inprogress')"
                     itemKey="name"
                 >
                     <template #item="{ element, index }">
@@ -56,6 +58,8 @@
                                     Assigned to: User
                                 </span>
                             </div>
+                            <div>Status: {{ element.status }}</div>
+                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
@@ -66,7 +70,7 @@
                     class="list-group"
                     :list="tests"
                     group="people"
-                    @change="log"
+                    @change="updateTickets('tests')"
                     itemKey="name"
                 >
                     <template #item="{ element, index }">
@@ -80,6 +84,8 @@
                                     Assigned to: User
                                 </span>
                             </div>
+                            <div>Status: {{ element.status }}</div>
+                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
@@ -90,7 +96,7 @@
                     class="list-group"
                     :list="done"
                     group="people"
-                    @change="log"
+                    @change="updateTickets('done')"
                     itemKey="name"
                 >
                     <template #item="{ element, index }">
@@ -104,6 +110,8 @@
                                     Assigned to: User
                                 </span>
                             </div>
+                            <div>Status: {{ element.status }}</div>
+                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
@@ -142,8 +150,19 @@ export default {
                 name: el.name + " cloned"
             };
         },
-        log: function(evt) {
-            console.log('drop')
+        updateTickets(status) {
+            console.log(this[status]);
+            for (let i = 0; i<this[status].length; i++) {
+                this[status][i].status = status;
+                this[status][i].order = i;
+            }
+
+            for (let ticket of this[status]) {
+                api.post('api/ticket/update', ticket )
+                    .then(response => {
+                        //
+                    });
+            }
         },
         logout () {
             localStorage.setItem('access_token', '');
@@ -290,7 +309,7 @@ export default {
 .card-data span {
     width: 100%;
     text-align: end;
-    color: gray;
+    color: grey;
 }
 .logout {
     cursor: pointer;
