@@ -197,7 +197,7 @@ export default {
     },
     mounted() {
         // this.getUserData();
-        this.showCurrentProject(1);
+        this.showCurrentProject(2);
 
         setTimeout(()=>{
             this.todo = this.tasksFilter('todo');
