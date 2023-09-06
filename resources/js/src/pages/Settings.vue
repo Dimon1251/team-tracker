@@ -17,28 +17,48 @@
         <div class="settings_content">
 
             <div v-if="tabs.teams">
+
                 <h2>Teams</h2>
-                <input v-model="newTeam" type="text">
-                <button @click="saveNewTeam">Save</button>
+                <div class="new_team_input">
+                    <span class="label">Add new team name:</span>
+                    <input class="form_input_settings" v-model="newTeam" type="text">
+                    <button @click="saveNewTeam" class="button settings_button">
+                        <div>Save</div>
+                    </button>
+                </div>
 
                 <div class="teams_list">
-                    <div v-for="team of teams">
-                        <input type="text" v-model="team.name" />
-                        <button @click="updateTeam(team)">Update</button>
-                        <button @click="deleteTeam(team.id)">Delete</button>
-
-                        <select v-model="team.selectedOption">
-                            <option v-for="user in users" :key="user.id" :value="user.id">{{ user.email }}</option>
-                        </select>
-                        <button @click="addUserToTeam(team.id, team.selectedOption)">Add user</button>
-
-                        <div v-for="user of team.users">
-                            <input class="user_of_team" type="text" v-model="user.email">
-                            <button @click="removeUserFormTeam(user.id, team.id)">Delete</button>
+                    <div v-for="team of teams" class="teams_card">
+                        <div class="teams_card_inputs">
+                            <div class="teams_card_inputs_team">
+                                <input class="form_input_settings" type="text" v-model="team.name" />
+                                <button class="button" @click="updateTeam(team)">
+                                    <div>Update</div>
+                                </button>
+                                <button class="button" @click="deleteTeam(team.id)">
+                                    <div>Delete</div>
+                                </button>
+                            </div>
+                            <div class="teams_card_inputs_members">
+                                <select class="form_input_settings" v-model="team.selectedOption">
+                                    <option v-for="user in users" :key="user.id" :value="user.id">{{ user.email }}</option>
+                                </select>
+                                <button class="button" @click="addUserToTeam(team.id, team.selectedOption)">
+                                    <div>Add user</div>
+                                </button>
+                            </div>
                         </div>
-
+                        <div class="teams_card_list">
+                            <div v-for="user of team.users" class="teams_card_list_row">
+                                <span class="user_of_team">{{user.email}}</span>
+                                <button class="button" @click="removeUserFormTeam(user.id, team.id)">
+                                    <div>Delete</div>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
 
             <div v-if="tabs.projects">
@@ -108,8 +128,6 @@
 <!--                <div v-for="ticket of currentSprint.tickets">{{ ticket.name }}</div>-->
 
             </div>
-
-
 
         </div>
     </div>
@@ -233,7 +251,8 @@ export default {
                 });
         },
         showCurrentProject(sprint_id) {
-            api.get('api/ticket/index-sprint', { id: sprint_id })
+            console.log(sprint_id)
+            api.post('api/ticket/index-sprint', { id: sprint_id })
                 .then(response => {
                     this.ticketsOfCurrentProject = response.data.Tickets;
                     console.log(response);
@@ -261,7 +280,7 @@ export default {
         addNewTicket() {
             api.post('api/ticket/create', {
                 name: this.newTicketName,
-                sprint_id: this.currentSprint.id,
+                sprint_id: this.currentSprint,
                 estimation: this.newTicketEstimation,
                 description: this.newTicketDescription
             })
@@ -272,11 +291,11 @@ export default {
             this.project = null;
             this.startDate = null;
 
-            this.showCurrentProject(this.currentSprint.id);
+            this.showCurrentProject(this.currentSprint);
         },
         getTickets() {
             if (this.currentSprint) {
-                this.showCurrentProject(this.currentSprint.id);
+                this.showCurrentProject(this.currentSprint);
             }
         }
 
@@ -412,7 +431,7 @@ export default {
     flex-direction: row;
     overflow: hidden;
     padding: 10px;
-    height: calc(100vh - 150px);
+    min-height: calc(100vh - 150px);
 }
 
 .settings_menu {
@@ -460,8 +479,114 @@ export default {
 .teams_list input {
     color: black;
 }
-.user_of_team {
-    margin-left: 10px;
+
+.new_team_input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.form_input_settings {
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #a0aec0 !important;
+    padding: 0 9px;
+    margin: 0 !important;
+    background-color: white;
+}
+
+.settings_button {
+    margin: 0 !important;
+    height: 36px !important;
+}
+
+.label {
+    line-height: 38px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.teams_list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    background-color: rgb(244, 244, 244);
+    border-radius: 10px;
+    width: 70%;
+}
+
+.teams_card {
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.teams_card > div {
+    width: 50%;
+}
+
+.teams_card_inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.teams_card_inputs_team,
+.teams_card_inputs_members {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.teams_card_inputs_team input {
+    width: 100%;
+    margin: 0;
+}
+
+.teams_card_inputs_team button {
+    width: calc(50% - 5px);
+    height: 38px !important;
+    margin: 0 !important;
+}
+
+.teams_card_inputs_members select,
+.teams_card_inputs_members button {
+    width: 100%;
+    margin: 0 !important;
+}
+
+.teams_card_list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.teams_card_list span {
+    font-size: 16px;
+    font-weight: 600;
+    flex-grow: 1;
+}
+
+.teams_card_list button {
+    height: 38px;
+    margin: 0;
+}
+
+.teams_card_list_row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
 }
 
 

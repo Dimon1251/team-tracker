@@ -16,22 +16,24 @@
                 <h2>Todo</h2>
                 <draggable
                     class="list-group"
-                    :list="list1"
+                    :list="todo"
                     group="people"
-                    @change="log"
+                    @change="updateTickets('todo')"
                     itemKey="name"
                 >
                     <template #item="{ element, index }">
                         <div class="list-group-item">
                             <div class="card-header">{{ element.name }}</div>
                             <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, quaerat.
+                                {{ element.description }}
                             </p>
                             <div class="card-data">
                                 <span>
                                     Assigned to: User
                                 </span>
                             </div>
+                            <div>Status: {{ element.status }}</div>
+                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
@@ -40,22 +42,24 @@
                 <h2>In progress</h2>
                 <draggable
                     class="list-group"
-                    :list="list2"
+                    :list="inprogress"
                     group="people"
-                    @change="log"
+                    @change="updateTickets('inprogress')"
                     itemKey="name"
                 >
                     <template #item="{ element, index }">
                         <div class="list-group-item">
                             <div class="card-header">{{ element.name }}</div>
                             <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, quaerat.
+                                {{ element.description }}
                             </p>
                             <div class="card-data">
                                 <span>
                                     Assigned to: User
                                 </span>
                             </div>
+                            <div>Status: {{ element.status }}</div>
+                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
@@ -64,22 +68,24 @@
                 <h2>Tests</h2>
                 <draggable
                     class="list-group"
-                    :list="list3"
+                    :list="tests"
                     group="people"
-                    @change="log"
+                    @change="updateTickets('tests')"
                     itemKey="name"
                 >
                     <template #item="{ element, index }">
                         <div class="list-group-item">
                             <div class="card-header">{{ element.name }}</div>
                             <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, quaerat.
+                                {{ element.description }}
                             </p>
                             <div class="card-data">
                                 <span>
                                     Assigned to: User
                                 </span>
                             </div>
+                            <div>Status: {{ element.status }}</div>
+                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
@@ -88,22 +94,24 @@
                 <h2>Done</h2>
                 <draggable
                     class="list-group"
-                    :list="list4"
+                    :list="done"
                     group="people"
-                    @change="log"
+                    @change="updateTickets('done')"
                     itemKey="name"
                 >
                     <template #item="{ element, index }">
                         <div class="list-group-item">
                             <div class="card-header">{{ element.name }}</div>
                             <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, quaerat.
+                                {{ element.description }}
                             </p>
                             <div class="card-data">
                                 <span>
                                     Assigned to: User
                                 </span>
                             </div>
+                            <div>Status: {{ element.status }}</div>
+                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
@@ -123,28 +131,11 @@ export default {
     },
     data() {
         return {
-            list1: [
-                { name: "John", id: 1 },
-                { name: "Joao", id: 2 },
-                { name: "Jean", id: 3 },
-                { name: "Gerard", id: 4 }
-            ],
-            list2: [
-                { name: "Juan", id: 5 },
-                { name: "Edgard", id: 6 },
-                { name: "Johnson", id: 7 }
-            ],
-            list3: [
-                { name: "test1", id: 8 },
-                { name: "test2", id: 9 },
-                { name: "test3", id: 10 }
-            ],
-            list4: [
-                { name: "test4", id: 11 },
-                { name: "test5", id: 12 },
-                { name: "test6", id: 13 }
-            ],
-            // name: null
+            todo: [],
+            inprogress: [],
+            tests: [],
+            done: [],
+            tickets: []
         }
     },
     methods: {
@@ -159,8 +150,19 @@ export default {
                 name: el.name + " cloned"
             };
         },
-        log: function(evt) {
-            console.log('drop')
+        updateTickets(status) {
+            console.log(this[status]);
+            for (let i = 0; i<this[status].length; i++) {
+                this[status][i].status = status;
+                this[status][i].order = i;
+            }
+
+            for (let ticket of this[status]) {
+                api.post('api/ticket/update', ticket )
+                    .then(response => {
+                        //
+                    });
+            }
         },
         logout () {
             localStorage.setItem('access_token', '');
@@ -181,10 +183,28 @@ export default {
                         this.name = response.data.User.name;
                     })
             }
+        },
+        showCurrentProject(sprint_id) {
+            api.post('api/ticket/index-sprint', { id: sprint_id })
+                .then(response => {
+                    this.tickets = response.data.Tickets;
+                    console.log(this.tickets);
+                });
+        },
+        tasksFilter(type) {
+            return this.tickets.filter(item => item.status === type);
         }
     },
     mounted() {
         // this.getUserData();
+        this.showCurrentProject(2);
+
+        setTimeout(()=>{
+            this.todo = this.tasksFilter('todo');
+            this.inprogress = this.tasksFilter('inprogress');
+            this.tests = this.tasksFilter('tests');
+            this.done = this.tasksFilter('done');
+        }, 500);
     },
     updated() {
         // this.getUserData();
@@ -227,7 +247,7 @@ export default {
     user-select: none;
 }
 .name {
-    color: gray;
+    color: grey;
     margin-right: 20px;
 }
 .info {
@@ -263,11 +283,11 @@ export default {
     height: calc(100% - 26px);
     border-radius: 10px;
     padding: 10px;
-    background: rgb(226,0,255);
-    background: -moz-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    background: -webkit-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    background: linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e200ff",endColorstr="#00f5ff",GradientType=1);
+    background: rgb(244, 244, 244);
+    //background: -moz-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
+    //background: -webkit-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
+    //background: linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
+    //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e200ff",endColorstr="#00f5ff",GradientType=1);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -289,7 +309,7 @@ export default {
 .card-data span {
     width: 100%;
     text-align: end;
-    color: gray;
+    color: grey;
 }
 .logout {
     cursor: pointer;
