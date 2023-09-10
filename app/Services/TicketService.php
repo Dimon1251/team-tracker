@@ -28,6 +28,7 @@ class TicketService
     }
 
     public function update($data, $id){
+        $data = collect($data)->except('id')->all();
         $this->ticketRepository->update($data, $id);
     }
 

@@ -207,9 +207,15 @@ export default {
             this.showAllTeams();
         },
         getAllUsers() {
-            api.get('api/users/index')
+         /*   api.get('api/users/index')
                 .then(response => {
                     this.users = response.data.Users;
+                });*/
+
+            api.get('api/teams/15/users')
+                .then(response => {
+                    //this.users = response.data.Users;
+                    console.log(response.data.Users);
                 });
         },
         addUserToTeam(teamId, userId) {
