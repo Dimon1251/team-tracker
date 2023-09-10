@@ -34,7 +34,6 @@
 
 import router from "../router/router.js";
 import api from "../api.js";
-// import store from "../store.js";
 
 export default {
   data() {
@@ -61,6 +60,7 @@ export default {
         api.get('api/user/auth')
             .then( response => {
               this.name = response.data.User.name;
+              this.$store.state.user_email = response.data.User.email;
             })
       }
     }
@@ -69,7 +69,7 @@ export default {
     this.getUserData();
   },
   updated() {
-    this.getUserData();
+    //
   }
 }
 </script>

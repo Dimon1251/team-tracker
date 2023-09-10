@@ -31,6 +31,7 @@
                     <div v-for="team of teams" class="teams_card">
                         <div class="teams_card_inputs">
                             <div class="teams_card_inputs_team">
+                                <span class="label">Enter team name:</span>
                                 <input class="form_input_settings" type="text" v-model="team.name" />
                                 <button class="button" @click="updateTeam(team)">
                                     <div>Update</div>
@@ -40,8 +41,12 @@
                                 </button>
                             </div>
                             <div class="teams_card_inputs_members">
+                                <span class="label">Choose user:</span>
                                 <select class="form_input_settings" v-model="team.selectedOption">
-                                    <option v-for="user in users" :key="user.id" :value="user.id">{{ user.email }}</option>
+                                    <option v-for="user in users" :key="user.id" :value="user.id"
+                                    v-if="teamIncludesUser(user)">
+                                        {{ user.email }}
+                                    </option>
                                 </select>
                                 <button class="button" @click="addUserToTeam(team.id, team.selectedOption)">
                                     <div>Add user</div>
@@ -49,9 +54,11 @@
                             </div>
                         </div>
                         <div class="teams_card_list">
-                            <div v-for="user of team.users" class="teams_card_list_row">
-                                <span class="user_of_team">{{user.email}}</span>
-                                <button class="button" @click="removeUserFormTeam(user.id, team.id)">
+                            <span class="label">Enter team name:</span>
+                            <div v-for="user_of_team of team.users" class="teams_card_list_row">
+                                <span class="user_of_team">{{user_of_team.email}}</span>
+                                <button class="button" @click="removeUserFormTeam(user_of_team.id, team.id)"
+                                        v-if="this.$store.state.user_email !== user_of_team.email">
                                     <div>Delete</div>
                                 </button>
                             </div>
@@ -297,8 +304,12 @@ export default {
             if (this.currentSprint) {
                 this.showCurrentProject(this.currentSprint);
             }
+        },
+        teamIncludesUser(user) {
+            console.log(user);
+            return true;
+            // return users.includes(user);
         }
-
     },
     mounted() {
         this.showAllTeams();
@@ -506,7 +517,7 @@ export default {
 .label {
     line-height: 38px;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600 !important;
 }
 
 .teams_list {
@@ -573,7 +584,7 @@ export default {
 
 .teams_card_list span {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     flex-grow: 1;
 }
 
