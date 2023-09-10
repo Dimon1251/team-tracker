@@ -23,9 +23,9 @@ class ProjectService
         return $this->projectRepository->one($id);
     }
 
-    public function create($data, $team_list){
-        $project = $this->projectRepository->create(['name' => $data]);
-        foreach ($team_list as $team){
+    public function create($data){
+        $project = $this->projectRepository->create(['name' => $data['name']]);
+        foreach ($data['team_list'] as $team){
             $project->teams()->attach($team);
         }
 

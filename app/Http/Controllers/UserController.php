@@ -32,12 +32,12 @@ class UserController extends Controller
         $this->userService->delete($request->id);
     }
 
-    public function addToTeam(Request $request){
-        $this->userService->addToTeam($request->user_id, $request->team_id);
+    public function addToTeam($user_id, $team_id){
+        $this->userService->addToTeam($user_id, $team_id);
     }
 
-    public function removeFromTeam(Request $request){
-        $this->userService->removeFromTeam($request->user_id, $request->team_id);
+    public function removeFromTeam($user_id, $team_id){
+        $this->userService->removeFromTeam($user_id, $team_id);
     }
 
     public function selfUser(){

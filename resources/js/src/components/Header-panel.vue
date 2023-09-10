@@ -57,7 +57,7 @@ export default {
     },
     getUserData() {
       if (localStorage.getItem('access_token')) {
-        api.get('api/user/auth')
+        api.get('api/users/auth')
             .then( response => {
               this.name = response.data.User.name;
               this.$store.state.user_email = response.data.User.email;

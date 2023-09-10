@@ -180,7 +180,7 @@ export default {
     methods: {
         saveNewTeam() {
             if (this.newTeam.trim().length > 0) {
-                api.post('api/team/create', { name: this.newTeam })
+                api.post('api/teams/create', { name: this.newTeam })
                     .then(response => {
                         //
                     });
@@ -189,33 +189,38 @@ export default {
             }
         },
         showAllTeams() {
-        api.get('api/team/index')
+        api.get('api/teams/index')
                 .then(response => {
                     this.teams = response.data.Teams;
                 });
         },
         deleteTeam(id) {
-            api.post('api/team/destroy', { id: id })
+            api.get(`api/teams/${id}/delete`)
                 .then(response => {
                     //
                 });
             this.showAllTeams();
         },
         updateTeam(team) {
-            api.post('api/team/update', { id: team.id, name: team.name })
+            api.post(`api/teams/${team.id}/update`, { name: team.name })
                 .then(response => {
-                    //
+                   /* if (response === undefined){
+                        console.log("Error");
+                    }
+                    else if (response.status === 200){
+                        console.log("Success");
+                    }*/
                 });
             this.showAllTeams();
         },
         getAllUsers() {
-            api.get('api/user/index')
+            api.get('api/users/index')
                 .then(response => {
                     this.users = response.data.Users;
                 });
         },
         addUserToTeam(teamId, userId) {
-            api.post('api/user/addToTeam', { user_id: userId, team_id: teamId })
+            api.get(`api/users/${userId}/add-to-team/${teamId}`)
                 .then(response => {
                     //
                 });
@@ -231,7 +236,7 @@ export default {
             };
         },
         removeUserFormTeam(userId, teamId) {
-            api.post('api/user/removeFromTeam', { user_id: userId, team_id: teamId })
+            api.get(`api/users/${userId}/remove-from-team/${teamId}`)
                 .then(response => {
                     //
                 });
@@ -241,7 +246,7 @@ export default {
             this.newTeamList.push((this.addNewTeam));
         },
         saveNewProject() {
-            api.post('api/project/create', { name: this.newProject, team_list: this.newTeamList })
+            api.post('api/projects/create', { name: this.newProject, team_list: this.newTeamList })
                 .then(response => {
                     //
                 });
@@ -251,7 +256,7 @@ export default {
             this.showAllProjects();
         },
         showAllProjects() {
-            api.get('api/project/index')
+            api.get('api/projects/index')
                 .then(response => {
                     this.projects = response.data.Projects;
                     // console.log(this.projects)
@@ -259,7 +264,7 @@ export default {
         },
         showCurrentProject(sprint_id) {
             console.log(sprint_id)
-            api.post('api/ticket/index-sprint', { id: sprint_id })
+            api.get(`api/sprints/${sprint_id}/tickets`)
                 .then(response => {
                     this.ticketsOfCurrentProject = response.data.Tickets;
                     console.log(response);
@@ -267,7 +272,7 @@ export default {
                 });
         },
         saveNewSprint() {
-            api.post('api/sprint/create', {
+            api.post('api/sprints/create', {
                 name: this.newSprint,
                 project_id: this.project,
                 start_date: this.startDate,
@@ -285,7 +290,7 @@ export default {
 
         },
         addNewTicket() {
-            api.post('api/ticket/create', {
+            api.post('api/tickets/create', {
                 name: this.newTicketName,
                 sprint_id: this.currentSprint,
                 estimation: this.newTicketEstimation,
