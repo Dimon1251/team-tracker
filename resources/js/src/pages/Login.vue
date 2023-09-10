@@ -38,7 +38,7 @@ export default {
                     // localStorage.setItem('refresh_token', response.data.refresh_token);
                     if (localStorage.getItem('access_token')){
                         this.$store.state.authorized = true;
-                        router.push('/');
+                        router.push('/projects');
                     }
                 }
                 if (response.status === 422){

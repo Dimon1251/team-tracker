@@ -191,13 +191,13 @@ export default {
                     console.log(this.tickets);
                 });
         },
+
         tasksFilter(type) {
             return this.tickets.filter(item => item.status === type);
         }
     },
     mounted() {
-        // this.getUserData();
-        this.showCurrentProject(2);
+        this.showCurrentProject(this.$route.params.id);
 
         setTimeout(()=>{
             this.todo = this.tasksFilter('todo');

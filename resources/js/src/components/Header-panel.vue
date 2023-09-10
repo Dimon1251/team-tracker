@@ -7,7 +7,7 @@
       <div class="nav">
         <ul>
           <li>
-            <span>Projects</span>
+            <router-link class="link" to="/projects">Projects</router-link>
           </li>
           <li>
             <span>My tasks</span>
@@ -57,7 +57,7 @@ export default {
     },
     getUserData() {
       if (localStorage.getItem('access_token')) {
-        api.get('api/users/auth')
+            api.get('api/users/auth')
             .then( response => {
               this.name = response.data.User.name;
               this.$store.state.user_email = response.data.User.email;

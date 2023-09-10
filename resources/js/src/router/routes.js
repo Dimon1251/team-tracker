@@ -1,18 +1,24 @@
 import Login from "../pages/Login.vue";
 import Signup from "../pages/Signup.vue";
 import Settings from "../pages/Settings.vue";
-import Home from "../pages/Home.vue";
+import Projects from "../pages/Projects.vue";
+import Board from "../pages/Board.vue";
 
 const routes = [
-    {
-        path: '/',
-        component: Home,
-        name: 'home'
-    },
     {
         path: '/settings',
         component: Settings,
         name: 'settings'
+    },
+    {
+        path: '/projects',
+        component: Projects,
+        name: 'projects'
+    },
+    {
+        path: '/sprints/:id',
+        component: Board,
+        name: 'board'
     },
     {
         path: '/login',
