@@ -157,12 +157,11 @@ export default {
                 this[status][i].order = i;
             }
 
-            for (let ticket of this[status]) {
-                api.post('api/ticket/update', ticket )
-                    .then(response => {
-                        //
-                    });
-            }
+            api.post(`api/tickets/update`, this[status] )
+                .then(response => {
+                    //
+                });
+
         },
         logout () {
             localStorage.setItem('access_token', '');
@@ -185,7 +184,7 @@ export default {
             }
         },
         showCurrentProject(sprint_id) {
-            api.post('api/ticket/index-sprint', { id: sprint_id })
+            api.get(`api/sprints/${sprint_id}/tickets`)
                 .then(response => {
                     this.tickets = response.data.Tickets;
                     console.log(this.tickets);

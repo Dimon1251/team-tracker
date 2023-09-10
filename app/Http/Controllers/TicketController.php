@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateTicketRequest;
 use App\Services\TicketService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TicketController extends Controller
 {
@@ -36,7 +37,9 @@ class TicketController extends Controller
     }
 
     public function update(Request $request){
-        $this->ticketService->update($request->toArray(), $request->id);
+        foreach ($request->toArray() as $item){
+            $this->ticketService->update($item, $item['id']);
+        }
     }
 
     public function destroy(Request $request){
