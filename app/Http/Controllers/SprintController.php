@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateSprintRequest;
 use App\Services\SprintService;
+use App\Services\TicketService;
 use Illuminate\Http\Request;
 
 class SprintController extends Controller
@@ -23,8 +25,8 @@ class SprintController extends Controller
         ]);
     }
 
-    public function create(Request $request){
-        $this->sprintService->create($request->toArray());
+    public function create(CreateSprintRequest $request){
+        $this->sprintService->create($request->validated());
     }
 
     public function update(Request $request){

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateTicketRequest;
 use App\Services\TicketService;
 use Illuminate\Http\Request;
 
@@ -16,8 +17,8 @@ class TicketController extends Controller
         ]);
     }
 
-    public function indexBySprint(Request $request){
-        $tickets = $this->ticketService->allBySprint($request->id);
+    public function ticketsBySprint($id){
+        $tickets = $this->ticketService->allBySprint($id);
         return response()->json([
             'Tickets' => $tickets,
         ]);
@@ -30,8 +31,8 @@ class TicketController extends Controller
         ]);
     }
 
-    public function create(Request $request){
-        $this->ticketService->create($request->toArray());
+    public function create(CreateTicketRequest $request){
+        $this->ticketService->create($request->validated());
     }
 
     public function update(Request $request){

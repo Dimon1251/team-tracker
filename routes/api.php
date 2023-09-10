@@ -31,54 +31,55 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::middleware('jwt.auth')->group(function () {
 
-    Route::prefix('/user')->name('user.')->group(function () {
+    Route::prefix('/users')->name('users.')->group(function () {
 
-        Route::get('/index', [UserController::class, 'index'])->name('index');
+        Route::get('/index', [UserController::class, 'index'])->name('index'); //ready
         Route::post('/show', [UserController::class, 'show'])->name('show');
         Route::post('/update', [UserController::class, 'update'])->name('update');
         Route::post('/destroy', [UserController::class, 'destroy'])->name('destroy');
-        Route::post('/addToTeam', [UserController::class, 'addToTeam'])->name('addToTeam'); //ready
-        Route::post('/removeFromTeam', [UserController::class, 'removeFromTeam'])->name('removeFromTeam'); //ready
-        Route::get('/auth', [UserController::class, 'selfUser'])->name('auth');
+        Route::get('/{user_id}/add-to-team/{team_id}', [UserController::class, 'addToTeam'])->name('addToTeam'); //ready
+        Route::get('/{user_id}/remove-from-team/{team_id}', [UserController::class, 'removeFromTeam'])->name('removeFromTeam'); //ready
+        Route::get('/auth', [UserController::class, 'selfUser'])->name('auth'); //ready
 
     });
 
-    Route::prefix('/project')->name('project.')->group(function () {
+    Route::prefix('/projects')->name('projects.')->group(function () {
 
-        Route::get('/index', [ProjectController::class, 'index'])->name('index');
+        Route::get('/index', [ProjectController::class, 'index'])->name('index'); //ready
         Route::post('/show', [ProjectController::class, 'show'])->name('show');
-        Route::post('/create', [ProjectController::class, 'create'])->name('create');
+        Route::post('/create', [ProjectController::class, 'create'])->name('create'); //ready
         Route::post('/update', [ProjectController::class, 'update'])->name('update');
         Route::post('/destroy', [ProjectController::class, 'destroy'])->name('destroy');
 
     });
 
-    Route::prefix('/sprint')->name('sprint.')->group(function () {
+    Route::prefix('/sprints')->name('sprints.')->group(function () {
 
+        Route::get('/{id}/tickets', [TicketController::class, 'ticketsBySprint'])->name('tickets'); //ready
         Route::get('/index', [SprintController::class, 'index'])->name('index');
         Route::post('/show', [SprintController::class, 'show'])->name('show');
-        Route::post('/create', [SprintController::class, 'create'])->name('create');
+        Route::post('/create', [SprintController::class, 'create'])->name('create'); //ready
         Route::post('/update', [SprintController::class, 'update'])->name('update');
         Route::post('/destroy', [SprintController::class, 'destroy'])->name('destroy');
 
     });
 
-    Route::prefix('/team')->name('team.')->group(function () {
+    Route::prefix('/teams')->name('teams.')->group(function () {
 
-        Route::get('/index', [TeamController::class, 'index'])->name('index');
-        Route::post('/show', [TeamController::class, 'show'])->name('show'); //ready
+        Route::get('/index', [TeamController::class, 'index'])->name('index'); //ready
+        Route::post('/show', [TeamController::class, 'show'])->name('show');
         Route::post('/create', [TeamController::class, 'create'])->name('create');  //ready
-        Route::post('/update', [TeamController::class, 'update'])->name('update');  //ready
-        Route::post('/destroy', [TeamController::class, 'destroy'])->name('destroy'); //ready
+        Route::post('/{id}/update', [TeamController::class, 'update'])->name('update'); //ready
+        Route::get('/{id}/delete', [TeamController::class, 'destroy'])->name('destroy'); //ready
 
     });
 
-    Route::prefix('/ticket')->name('ticket.')->group(function () {
+    Route::prefix('/tickets')->name('ticket.')->group(function () {
 
         Route::get('/index', [TicketController::class, 'index'])->name('index');
-        Route::post('/index-sprint', [TicketController::class, 'indexBySprint'])->name('indexBySprint');
+        //Route::post('/index-sprint', [TicketController::class, 'indexBySprint'])->name('indexBySprint');
         Route::post('/show', [TicketController::class, 'show'])->name('show');
-        Route::post('/create', [TicketController::class, 'create'])->name('create');
+        Route::post('/create', [TicketController::class, 'create'])->name('create'); //ready
         Route::post('/update', [TicketController::class, 'update'])->name('update');
         Route::post('/destroy', [TicketController::class, 'destroy'])->name('destroy');
 

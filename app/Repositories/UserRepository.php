@@ -13,7 +13,10 @@ class UserRepository extends Repository
     }
 
     public function addToTeam($user_id, $team_id){
-        Team::where('id', $team_id)->first()->users()->attach($user_id);
+        $team = Team::find($team_id);
+        if ($team && !$team->users->contains($user_id)) {
+            $team->users()->attach($user_id);
+        }
     }
 
     public function removeFromTeam($user_id, $team_id){

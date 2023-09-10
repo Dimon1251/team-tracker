@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateProjectRequest;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
 
@@ -23,8 +24,8 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function create(Request $request){
-        $this->projectService->create($request->name, $request->team_list);
+    public function create(CreateProjectRequest $request){
+        $this->projectService->create($request->validated());
     }
 
     public function update(Request $request){
