@@ -11,11 +11,11 @@ router.beforeEach( (to, from, next) => {
     if (to.name === 'login' || to.name === 'signup') {
         if(accessToken) {
             return next({
-                name: 'home'
+                name: 'projects'
             })
         }
     }
-    if ((to.name === 'home' || to.name === 'settings') && !accessToken) {
+    if ((to.name === 'projects' || to.name === 'settings' || to.name === 'board') && !accessToken) {
         return next({
             name: 'login'
         })

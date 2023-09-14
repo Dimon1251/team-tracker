@@ -3,7 +3,8 @@ import { createStore } from 'vuex'
 const store = createStore({
     state() {
         return {
-            authorized: false
+            authorized: false,
+            user_email: ''
         }
     }
 })

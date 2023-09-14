@@ -7,7 +7,7 @@
       <div class="nav">
         <ul>
           <li>
-            <span>Projects</span>
+            <router-link class="link" to="/projects">Projects</router-link>
           </li>
           <li>
             <span>My tasks</span>
@@ -34,7 +34,6 @@
 
 import router from "../router/router.js";
 import api from "../api.js";
-// import store from "../store.js";
 
 export default {
   data() {
@@ -58,9 +57,10 @@ export default {
     },
     getUserData() {
       if (localStorage.getItem('access_token')) {
-        api.get('api/users/auth')
+            api.get('/api/users/auth')
             .then( response => {
               this.name = response.data.User.name;
+              this.$store.state.user_email = response.data.User.email;
             })
       }
     }
@@ -69,7 +69,7 @@ export default {
     this.getUserData();
   },
   updated() {
-    this.getUserData();
+    //
   }
 }
 </script>
@@ -109,7 +109,7 @@ export default {
   user-select: none;
 }
 .name {
-  color: gray;
+  color: grey;
   margin-right: 20px;
 }
 .info {
@@ -171,7 +171,7 @@ export default {
 .card-data span {
   width: 100%;
   text-align: end;
-  color: gray;
+  color: grey;
 }
 .logout {
   cursor: pointer;

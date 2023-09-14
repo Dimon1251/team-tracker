@@ -21,7 +21,7 @@
                 <h2>Teams</h2>
                 <div class="new_team_input">
                     <span class="label">Add new team name:</span>
-                    <input class="form_input_settings" v-model="newTeam" type="text">
+                    <input class="form_input_settings" v-model="newTeam" type="text" :class="{ 'validation_error': addNewTeamError }">
                     <button @click="saveNewTeam" class="button settings_button">
                         <div>Save</div>
                     </button>
@@ -31,6 +31,7 @@
                     <div v-for="team of teams" class="teams_card">
                         <div class="teams_card_inputs">
                             <div class="teams_card_inputs_team">
+                                <span class="label">Enter team name:</span>
                                 <input class="form_input_settings" type="text" v-model="team.name" />
                                 <button class="button" @click="updateTeam(team)">
                                     <div>Update</div>
@@ -40,8 +41,11 @@
                                 </button>
                             </div>
                             <div class="teams_card_inputs_members">
-                                <select class="form_input_settings" v-model="team.selectedOption">
-                                    <option v-for="user in users" :key="user.id" :value="user.id">{{ user.email }}</option>
+                                <span class="label">Choose user:</span>
+                                <select class="form_input_settings" v-model="team.selectedOption" >
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.email }}
+                                    </option>
                                 </select>
                                 <button class="button" @click="addUserToTeam(team.id, team.selectedOption)">
                                     <div>Add user</div>
@@ -49,9 +53,11 @@
                             </div>
                         </div>
                         <div class="teams_card_list">
-                            <div v-for="user of team.users" class="teams_card_list_row">
-                                <span class="user_of_team">{{user.email}}</span>
-                                <button class="button" @click="removeUserFormTeam(user.id, team.id)">
+                            <span class="label">Team users list:</span>
+                            <div v-for="user_of_team of team.users" class="teams_card_list_row">
+                                <span class="user_of_team">{{user_of_team.email}}</span>
+                                <button class="button" @click="removeUserFormTeam(user_of_team.id, team.id)"
+                                        v-if="this.$store.state.user_email !== user_of_team.email">
                                     <div>Delete</div>
                                 </button>
                             </div>
@@ -63,70 +69,139 @@
 
             <div v-if="tabs.projects">
                 <h2>Projects</h2>
-                <input v-model="newProject" type="text">
-                <select v-model="addNewTeam">
-                    <option v-for="team in teams" :key="team.id" :value="team.id">{{ team.name }}</option>
-                </select>
-                <button @click="addTeamToProject">add</button>
-                <button @click="saveNewProject">Save</button>
+                <div class="team_block">
+                    <div class="new_project_block">
+                        <span class="label">Enter new project name:</span>
+                        <input class="new_project_input" v-model="newProject" type="text">
+                        <span class="label">Assign a team:</span>
 
-                <div v-for="team of newTeamList">
-                    <div>{{ team }}</div>
-                </div>
-
-                <div v-for="project of projects">
-                    <div>{{ project.name }}</div>
-                </div>
-
-            </div>
-
-            <div v-if="tabs.sprints">
-                <h2>Sprints</h2>
-                <input type="text" v-model="newSprint">
-                <select v-model="project" style="min-width: 300px">
-                    <option v-for="project in projects" :key="project.id" :value="project.id">{{ project.name }}</option>
-                </select>
-
-                <input type="date" v-model="startDate">
-                <input type="date" v-model="endDate">
-                <button @click="saveNewSprint">Save</button>
-
-
-                <div>
-                    <div v-for="project of projects">
-                        <h3>Project: {{ project.name }}</h3>
-                        <p v-for="sprint of project.sprints" style="margin-left: 10px">{{sprint.name}}</p>
+                        <select v-model="addNewTeam" class="form_input_settings">
+                            <option v-for="team in teams" :key="team.id" :value="team.id">{{ team.name }}</option>
+                        </select>
+                        <div class="project_add_buttons">
+                            <button @click="addTeamToProject" class="button">
+                                <div>
+                                    add
+                                </div>
+                            </button>
+                            <button @click="saveNewProject" class="button">
+                                <div>
+                                    Save
+                                </div>
+                            </button>
+                        </div>
+                        <span class="label">Assigned teams:</span>
+                        <div v-for="team of newTeamList" class="team_list">
+                            <div>{{ getTeamNameById(team) }}</div>
+                        </div>
+                    </div>
+                    <div class="projects_list">
+                        <span class="label">Projects:</span>
+                        <div v-for="project of projects" class="project_item">
+                            <div>{{ project.name }}</div>
+                            <button class="button" @click="deleteProject(project.id)">
+                                <div>
+                                    Delete
+                                </div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <div v-if="tabs.sprints">
+                <h2>Sprints</h2>
+                <div class="sprints_block">
+
+                    <span class="label">Enter new sprint name:</span>
+
+                    <input type="text" v-model="newSprint" class="new_project_input">
+                    <span class="label">Choose project:</span>
+
+                    <select v-model="project" class="form_input_settings">
+                        <option v-for="project in projects" :key="project.id" :value="project.id">{{ project.name }}</option>
+                    </select>
+                    <span class="label">Choose time range:</span>
+                    <div class="time_range_block">
+                        <input type="date" v-model="startDate">
+                        <input type="date" v-model="endDate">
+                    </div>
+                    <button @click="saveNewSprint" class="button">
+                        <div>
+                            Save
+                        </div>
+                    </button>
+
+
+                    <div class="project_cards_container">
+                        <div v-for="project of projects" class="project_card">
+                            <span class="label">Project name:</span>
+
+                            <h3>{{ project.name }}</h3>
+                            <span class="label">Sprints:</span>
+                            <div v-for="sprint of project.sprints" class="sprints_list">
+                                <span>
+                                    {{sprint.name}}
+                                </span>
+                                <button class="button" @click="deleteSprint(sprint.id)">
+                                    <div>
+                                        Delete
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
             <div v-if="tabs.tickets">
                 <h2>Tickets</h2>
-                <div>
-                    Choose project:
 
-                    <select v-model="projectForSprint">
+                <div class="tickets_block">
+                    <span class="label">Choose project:</span>
+                    <select v-model="projectForSprint" class="form_input_settings">
                         <option v-for="project in projects" :key="project.id" :value="project">{{ project.name }}</option>
                     </select>
-                </div>
-                <div v-if="projectForSprint">
-                    Choose sprint:
-
-                    <select v-model="currentSprint" @change="getTickets">
+                    <span class="label" v-if="projectForSprint">Choose sprint:</span>
+                    <select v-model="currentSprint" @change="getTickets" v-if="projectForSprint" class="form_input_settings">
                         <option v-for="sprint in projectForSprint.sprints" :key="sprint.id" :value="sprint.id">{{ sprint.name }}</option>
                     </select>
+                    <span class="label">Name:</span>
+                    <input type="text" v-model="newTicketName" class="new_project_input">
+                    <span class="label">Description:</span>
+                    <input type="text" v-model="newTicketDescription" class="new_project_input">
+                    <span class="label">Estimation:</span>
+                    <select v-model="newTicketEstimation" class="form_input_settings">
+                        <option v-for="item in estimationList" :value="item">{{ item }}</option>
+                    </select>
+
+                    <button @click="addNewTicket" class="button">
+                        <div>
+                            Add
+                        </div>
+                    </button>
+                    <div v-if="ticketsOfCurrentProject.length">
+                        <span class="label">Tickets:</span>
+                        <div class="tickets_list">
+                            <div class="ticket" v-for="ticket of ticketsOfCurrentProject">
+                                <input type="text" v-model="ticket.name" class="new_project_input">
+                                <div class="tickets_buttons">
+                                    <button class="button">
+                                        <div>
+                                            Update
+                                        </div>
+                                    </button>
+                                    <button class="button" @click="deleteTicket(ticket.id)">
+                                        <div>
+                                            Delete
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div>Name:</div>
-                <input type="text" v-model="newTicketName">
-                <div>Description:</div>
-                <input type="text" v-model="newTicketDescription">
-                <div>Estimation:</div>
-                <input type="number" v-model="newTicketEstimation">
-                <button @click="addNewTicket">Add</button>
-
-<!--                <div v-for="ticket of currentSprint.tickets">{{ ticket.name }}</div>-->
-
             </div>
 
         </div>
@@ -149,7 +224,7 @@ export default {
                 sprints: false,
                 tickets: false
             },
-            newTeam: null,
+            newTeam: '',
             newProject: null,
             teams: [],
             users: [],
@@ -167,51 +242,64 @@ export default {
             newTicketName: null,
             newTicketDescription: null,
             newTicketEstimation: 0,
-            ticketsOfCurrentProject: []
+            ticketsOfCurrentProject: [],
+            addNewTeamError: false,
+            updateTeamName: false,
+            estimationList: [
+                '250',
+                '500',
+                '1000',
+                '2000',
+                '3000'
+            ]
         }
     },
     methods: {
         saveNewTeam() {
-            if (this.newTeam.trim().length > 0) {
-                api.post('api/teams/create', { name: this.newTeam })
+            this.addNewTeamError = false;
+            if (this.newTeam !== null && this.newTeam.trim().length > 0) {
+                    api.post('api/teams/create', { name: this.newTeam })
                     .then(response => {
                         //
                     });
                 this.newTeam = null;
                 this.showAllTeams();
+            } else {
+                this.addNewTeamError = true;
             }
         },
         showAllTeams() {
-        api.get('api/teams/index')
+            api.get('api/teams/index')
                 .then(response => {
                     this.teams = response.data.Teams;
                 });
         },
         deleteTeam(id) {
-            api.get(`api/teams/${id}/delete`)
+                api.get(`api/teams/${id}/delete`)
                 .then(response => {
                     //
                 });
             this.showAllTeams();
         },
         updateTeam(team) {
-            api.post(`api/teams/${team.id}/update`, { name: team.name })
-                .then(response => {
-                   /* if (response === undefined){
-                        console.log("Error");
-                    }
-                    else if (response.status === 200){
-                        console.log("Success");
-                    }*/
-                });
-            this.showAllTeams();
+            this.updateTeamName = false;
+            if (team.name !== null && team.name.trim().length > 0) {
+                api.post(`api/teams/${team.id}/update`, { name: team.name })
+                    .then(response => {
+                        /* if (response === undefined){
+                             console.log("Error");
+                         }
+                         else if (response.status === 200){
+                             console.log("Success");
+                         }*/
+                    });
+                this.showAllTeams();
+            } else {
+                this.updateTeamName = true;
+            }
+
         },
         getAllUsers() {
-         /*   api.get('api/users/index')
-                .then(response => {
-                    this.users = response.data.Users;
-                });*/
-
             api.get('api/teams/15/users')
                 .then(response => {
                     //this.users = response.data.Users;
@@ -219,11 +307,14 @@ export default {
                 });
         },
         addUserToTeam(teamId, userId) {
-            api.get(`api/users/${userId}/add-to-team/${teamId}`)
-                .then(response => {
-                    //
-                });
-            this.showAllTeams();
+
+            if(userId) {
+                api.get(`api/users/${userId}/add-to-team/${teamId}`)
+                    .then(response => {
+                        //
+                    });
+                this.showAllTeams();
+            }
         },
         changeTab(tab) {
             for (let key in this.tabs) {
@@ -235,7 +326,7 @@ export default {
             };
         },
         removeUserFormTeam(userId, teamId) {
-            api.get(`api/users/${userId}/remove-from-team/${teamId}`)
+                api.get(`api/users/${userId}/remove-from-team/${teamId}`)
                 .then(response => {
                     //
                 });
@@ -245,7 +336,7 @@ export default {
             this.newTeamList.push((this.addNewTeam));
         },
         saveNewProject() {
-            api.post('api/projects/create', { name: this.newProject, team_list: this.newTeamList })
+                api.post('api/projects/create', { name: this.newProject, team_list: this.newTeamList })
                 .then(response => {
                     //
                 });
@@ -256,27 +347,24 @@ export default {
         },
         showAllProjects() {
             api.get('api/projects/index')
-                .then(response => {
-                    this.projects = response.data.Projects;
-                    // console.log(this.projects)
-                });
+            .then(response => {
+                this.projects = response.data.Projects;
+            });
         },
         showCurrentProject(sprint_id) {
-            console.log(sprint_id)
             api.get(`api/sprints/${sprint_id}/tickets`)
-                .then(response => {
-                    this.ticketsOfCurrentProject = response.data.Tickets;
-                    console.log(response);
-                    console.log(this.ticketsOfCurrentProject);
-                });
+            .then(response => {
+                this.ticketsOfCurrentProject = response.data.Tickets;
+                console.log(this.ticketsOfCurrentProject);
+            });
         },
         saveNewSprint() {
             api.post('api/sprints/create', {
-                name: this.newSprint,
-                project_id: this.project,
-                start_date: this.startDate,
-                end_date: this.endDate
-            })
+            name: this.newSprint,
+            project_id: this.project,
+            start_date: this.startDate,
+            end_date: this.endDate
+        })
                 .then(response => {
                     //
                 });
@@ -308,8 +396,31 @@ export default {
             if (this.currentSprint) {
                 this.showCurrentProject(this.currentSprint);
             }
-        }
-
+        },
+        deleteProject(id) {
+            api.post('api/projects/destroy', { id: id })
+                .then(response => {
+                    //
+                });
+            this.showAllProjects();
+        },
+        getTeamNameById(id) {
+            return this.teams.find(item => item.id === id).name;
+        },
+        deleteSprint(id) {
+            api.post('api/sprints/destroy', { id: id })
+                .then(response => {
+                    //
+                });
+            this.showAllProjects();
+        },
+        deleteTicket(id) {
+            api.post('api/tickets/destroy', { id: id })
+                .then(response => {
+                    //
+                });
+            this.getTickets();
+        },
     },
     mounted() {
         this.showAllTeams();
@@ -357,7 +468,7 @@ export default {
     user-select: none;
 }
 .name {
-    color: gray;
+    color: grey;
     margin-right: 20px;
 }
 .info {
@@ -419,7 +530,7 @@ export default {
 .card-data span {
     width: 100%;
     text-align: end;
-    color: gray;
+    color: grey;
 }
 .logout {
     cursor: pointer;
@@ -436,7 +547,6 @@ export default {
 .settings {
     margin: 12px;
     border-radius: 20px;
-    min-height: 100px;
     background-color: white;
     display: flex;
     flex-direction: row;
@@ -449,18 +559,9 @@ export default {
     width: 300px;
     display: flex;
     flex-direction: column;
-    background: rgb(226,0,255);
-    background: -moz-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    background: -webkit-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    background: linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e200ff",endColorstr="#00f5ff",GradientType=1);
+    background-color: rgb(244, 244, 244);
     border-radius: 10px;
     margin-right: 10px;
-}
-
-.settings_menu ul {
-    //margin: 2px;
-    //border-radius: 16px;
 }
 
 .settings_menu ul li {
@@ -517,7 +618,7 @@ export default {
 .label {
     line-height: 38px;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600 !important;
 }
 
 .teams_list {
@@ -528,7 +629,7 @@ export default {
     padding: 10px;
     background-color: rgb(244, 244, 244);
     border-radius: 10px;
-    width: 70%;
+    width: 100%;
 }
 
 .teams_card {
@@ -584,7 +685,7 @@ export default {
 
 .teams_card_list span {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     flex-grow: 1;
 }
 
@@ -598,6 +699,165 @@ export default {
     flex-direction: row;
     gap: 10px;
     align-items: center;
+}
+
+.validation_error {
+    border-color: red !important;
+}
+
+.team_block {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(244, 244, 244);
+}
+
+.new_project_block,
+.projects_list {
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px;
+    width: 50%;
+}
+
+.new_project_input {
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #a0aec0 !important;
+}
+
+.project_add_buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.project_add_buttons button {
+    height: 38px;
+    width: calc(50% - 5px);
+}
+
+.team_list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.project_item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.project_item button {
+    height: 38px !important;
+}
+
+.sprints_block {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.project_cards_container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    background-color: rgb(244, 244, 244);
+    padding: 10px;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.time_range_block {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.sprints_block input {
+    margin: 0 !important;
+}
+
+.sprints_block button {
+    height: 38px !important;
+}
+
+.time_range_block input {
+    width: calc(50% - 5px);
+    margin: 0 0 10px !important;
+    border-radius: 6px;
+    border: 1px solid #a0aec0 !important;
+}
+
+.project_card {
+    border-radius: 6px;
+    background-color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sprints_list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tickets_block {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.tickets_block input {
+    margin: 0;
+}
+
+.tickets_list {
+    border-radius: 6px;
+    background-color: rgb(244, 244, 244);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ticket {
+    border-radius: 6px;
+    background-color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.ticket input {
+    flex-grow: 1;
+}
+.tickets_buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.tickets_buttons button {
+    height: 32px !important;
+    margin: 0 !important;
+    width: calc(50% - 5px);
+}
+.tickets_buttons button div {
+    padding: 0 5px !important;
 }
 
 
