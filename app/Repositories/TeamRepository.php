@@ -16,4 +16,10 @@ class TeamRepository extends Repository
         return User::where('id', $id)->first()->teams;
     }
 
+    public function usersNotInTeam($id){
+        return User::whereDoesntHave('teams', function ($query) use ($id) {
+            $query->where('team_id', $id);
+        })->get();
+    }
+
 }

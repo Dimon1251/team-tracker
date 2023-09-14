@@ -71,6 +71,7 @@ Route::middleware('jwt.auth')->group(function () {
         Route::post('/create', [TeamController::class, 'create'])->name('create');  //ready
         Route::post('/{id}/update', [TeamController::class, 'update'])->name('update'); //ready
         Route::get('/{id}/delete', [TeamController::class, 'destroy'])->name('destroy'); //ready
+        Route::get('/{id}/users', [TeamController::class, 'usersByTeams'])->name('users');
 
     });
 
@@ -80,7 +81,7 @@ Route::middleware('jwt.auth')->group(function () {
         //Route::post('/index-sprint', [TicketController::class, 'indexBySprint'])->name('indexBySprint');
         Route::post('/show', [TicketController::class, 'show'])->name('show');
         Route::post('/create', [TicketController::class, 'create'])->name('create'); //ready
-        Route::post('/update', [TicketController::class, 'update'])->name('update');
+        Route::post('/update', [TicketController::class, 'update'])->name('update'); //ready
         Route::post('/destroy', [TicketController::class, 'destroy'])->name('destroy');
 
     });

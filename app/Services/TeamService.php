@@ -29,6 +29,10 @@ class TeamService
         return $teams;
     }
 
+    public function usersByTeams($id){
+        return $this->teamRepository->usersNotInTeam($id);
+    }
+
     public function find($id){
         return $this->teamRepository->one($id);
     }

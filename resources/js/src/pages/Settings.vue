@@ -300,9 +300,10 @@ export default {
 
         },
         getAllUsers() {
-                api.get('api/users/index')
+            api.get('api/teams/15/users')
                 .then(response => {
-                    this.users = response.data.Users;
+                    //this.users = response.data.Users;
+                    console.log(response.data.Users);
                 });
         },
         addUserToTeam(teamId, userId) {

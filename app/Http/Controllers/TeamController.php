@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTeamRequest;
 use App\Http\Requests\UpdateTeamRequest;
+use App\Models\Team;
 use App\Services\TeamService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +26,13 @@ class TeamController extends Controller
             'Team' => $team,
         ]);
     }*/
+
+    public function usersByTeams($id){
+        $users = $this->teamService->usersByTeams($id);
+        return response()->json([
+            'Users' => $users,
+        ]);
+    }
 
     public function create(CreateTeamRequest $request){
         $this->teamService->create($request->validated());
