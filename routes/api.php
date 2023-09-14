@@ -40,6 +40,7 @@ Route::middleware('jwt.auth')->group(function () {
         Route::get('/{user_id}/add-to-team/{team_id}', [UserController::class, 'addToTeam'])->name('addToTeam'); //ready
         Route::get('/{user_id}/remove-from-team/{team_id}', [UserController::class, 'removeFromTeam'])->name('removeFromTeam'); //ready
         Route::get('/auth', [UserController::class, 'selfUser'])->name('auth'); //ready
+        Route::get('/tickets', [TicketController::class, 'ticketsByUser'])->name('tickets'); //ready
 
     });
 
