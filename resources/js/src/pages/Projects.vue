@@ -6,13 +6,12 @@
         My projects
     </div>
     <div class="projects_block">
-        <div v-for="project of projects">
-            <span class="label">Project name: {{project.name}}</span>
-<!--            <div v-for="sprint of project.sprints">-->
-<!--                {{sprint.name}}-->
-<!--            </div>-->
-            <router-link class="link" :to="getSprintRoute(sprint.id)" v-for="sprint of project.sprints">
-                {{sprint.name}}
+        <div v-for="project of projects" class="project_cards_container">
+            <h3 class="label">{{project.name}}:</h3>
+            <router-link class="sprint" :to="getSprintRoute(sprint.id)" v-for="sprint of project.sprints">
+                <div>Name: {{sprint.name}}</div>
+                <div>Start: {{parseDate(sprint.start_date)}}</div>
+                <div>Finish: {{parseDate(sprint.end_date)}}</div>
             </router-link>
         </div>
     </div>
@@ -43,6 +42,10 @@ export default {
         },
         getSprintRoute(id) {
             return `/sprints/${id}`;
+        },
+        parseDate(string) {
+            const date = new Date(string);
+            return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         }
     },
     mounted() {
@@ -175,19 +178,6 @@ export default {
     overflow: hidden;
     padding: 10px;
     min-height: calc(100vh - 150px);
-}
-
-.settings_menu {
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    background: rgb(226,0,255);
-    background: -moz-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    background: -webkit-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    background: linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e200ff",endColorstr="#00f5ff",GradientType=1);
-    border-radius: 10px;
-    margin-right: 10px;
 }
 
 .settings_menu ul li {
@@ -486,6 +476,19 @@ export default {
     padding: 0 5px !important;
 }
 
+.sprint {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: black;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+}
 
 
 

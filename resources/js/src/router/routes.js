@@ -31,6 +31,10 @@ const routes = [
         name: 'signup'
     },
     {
+        path: '/',
+        redirect: '/projects'
+    },
+    {
         path: '/:catchAll(.*)',
         name: '404',
         redirect: '/',

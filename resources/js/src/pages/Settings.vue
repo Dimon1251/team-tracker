@@ -116,7 +116,7 @@
                     <span class="label">Enter new sprint name:</span>
 
                     <input type="text" v-model="newSprint" class="new_project_input">
-                    <span class="label">Choose sprint:</span>
+                    <span class="label">Choose project:</span>
 
                     <select v-model="project" class="form_input_settings">
                         <option v-for="project in projects" :key="project.id" :value="project.id">{{ project.name }}</option>
@@ -345,27 +345,25 @@ export default {
             this.showAllProjects();
         },
         showAllProjects() {
-                api.get('api/projects/index')
-                .then(response => {
-                    this.projects = response.data.Projects;
-                    // console.log(this.projects)
-                });
+            api.get('api/projects/index')
+            .then(response => {
+                this.projects = response.data.Projects;
+            });
         },
         showCurrentProject(sprint_id) {
-            console.log(sprint_id)
-                api.get(`api/sprints/${sprint_id}/tickets`)
-                .then(response => {
-                    this.ticketsOfCurrentProject = response.data.Tickets;
-                    console.log(this.ticketsOfCurrentProject);
-                });
+            api.get(`api/sprints/${sprint_id}/tickets`)
+            .then(response => {
+                this.ticketsOfCurrentProject = response.data.Tickets;
+                console.log(this.ticketsOfCurrentProject);
+            });
         },
         saveNewSprint() {
-                api.post('api/sprints/create', {
-                name: this.newSprint,
-                project_id: this.project,
-                start_date: this.startDate,
-                end_date: this.endDate
-            })
+            api.post('api/sprints/create', {
+            name: this.newSprint,
+            project_id: this.project,
+            start_date: this.startDate,
+            end_date: this.endDate
+        })
                 .then(response => {
                     //
                 });
@@ -378,7 +376,7 @@ export default {
 
         },
         addNewTicket() {
-                api.post('api/tickets/create', {
+            api.post('api/tickets/create', {
                 name: this.newTicketName,
                 sprint_id: this.currentSprint,
                 estimation: this.newTicketEstimation,
@@ -548,7 +546,6 @@ export default {
 .settings {
     margin: 12px;
     border-radius: 20px;
-    //min-height: 100px;
     background-color: white;
     display: flex;
     flex-direction: row;
@@ -561,11 +558,7 @@ export default {
     width: 300px;
     display: flex;
     flex-direction: column;
-    background: rgb(226,0,255);
-    background: -moz-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    background: -webkit-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    background: linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e200ff",endColorstr="#00f5ff",GradientType=1);
+    background-color: rgb(244, 244, 244);
     border-radius: 10px;
     margin-right: 10px;
 }

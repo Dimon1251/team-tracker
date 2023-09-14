@@ -4,16 +4,20 @@
 
     <div class="info">
         <div class="info_project">
-            Project / Sprint
+            {{ currentProject.name }} / {{ currentSprint.name }}
         </div>
-        <div class="info_team">
-            Team: Team name
+        <div class="info_estimation">
+            <span>Total estimation: {{sumAllEstimation(tickets)}}</span>
+            <span>Date range: {{ parseDate(currentSprint.start_date) }} - {{ parseDate(currentSprint.end_date) }}</span>
         </div>
     </div>
 
     <div class="board">
             <div class="block">
-                <h2>Todo</h2>
+                <div class="card_header">
+                    <h2>Todo</h2>
+                    <span>Est.: {{sumAllEstimation(todo)}}</span>
+                </div>
                 <draggable
                     class="list-group"
                     :list="todo"
@@ -23,23 +27,34 @@
                 >
                     <template #item="{ element, index }">
                         <div class="list-group-item">
-                            <div class="card-header">{{ element.name }}</div>
+                            <div class="card-header">
+                                <span>{{ element.name }}</span>
+                                <span>{{ element.estimation }}</span>
+                            </div>
                             <p class="card-text">
                                 {{ element.description }}
                             </p>
                             <div class="card-data">
-                                <span>
-                                    Assigned to: User
-                                </span>
+                                <div>
+                                    <span>
+                                        Assigned to:
+                                    </span>
+                                    <select>
+                                        <option value="0">Nikita</option>
+                                        <option value="1">Dima</option>
+                                        <option value="2">Andrii</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>Status: {{ element.status }}</div>
-                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
             </div>
             <div class="block">
-                <h2>In progress</h2>
+                <div class="card_header">
+                    <h2>In progress</h2>
+                    <span>Est.: {{sumAllEstimation(inprogress)}}</span>
+                </div>
                 <draggable
                     class="list-group"
                     :list="inprogress"
@@ -49,23 +64,34 @@
                 >
                     <template #item="{ element, index }">
                         <div class="list-group-item">
-                            <div class="card-header">{{ element.name }}</div>
+                            <div class="card-header">
+                                <span>{{ element.name }}</span>
+                                <span>{{ element.estimation }}</span>
+                            </div>
                             <p class="card-text">
                                 {{ element.description }}
                             </p>
                             <div class="card-data">
-                                <span>
-                                    Assigned to: User
-                                </span>
+                                <div>
+                                    <span>
+                                        Assigned to:
+                                    </span>
+                                    <select>
+                                        <option value="0">Nikita</option>
+                                        <option value="1">Dima</option>
+                                        <option value="2">Andrii</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>Status: {{ element.status }}</div>
-                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
             </div>
             <div class="block">
-                <h2>Tests</h2>
+                <div class="card_header">
+                    <h2>Tests</h2>
+                    <span>Est.: {{sumAllEstimation(tests)}}</span>
+                </div>
                 <draggable
                     class="list-group"
                     :list="tests"
@@ -75,23 +101,34 @@
                 >
                     <template #item="{ element, index }">
                         <div class="list-group-item">
-                            <div class="card-header">{{ element.name }}</div>
+                            <div class="card-header">
+                                <span>{{ element.name }}</span>
+                                <span>{{ element.estimation }}</span>
+                            </div>
                             <p class="card-text">
                                 {{ element.description }}
                             </p>
                             <div class="card-data">
-                                <span>
-                                    Assigned to: User
-                                </span>
+                                <div>
+                                    <span>
+                                        Assigned to:
+                                    </span>
+                                    <select>
+                                        <option value="0">Nikita</option>
+                                        <option value="1">Dima</option>
+                                        <option value="2">Andrii</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>Status: {{ element.status }}</div>
-                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
             </div>
             <div class="block">
-                <h2>Done</h2>
+                <div class="card_header">
+                    <h2>Done</h2>
+                    <span>Est.: {{sumAllEstimation(done)}}</span>
+                </div>
                 <draggable
                     class="list-group"
                     :list="done"
@@ -101,17 +138,25 @@
                 >
                     <template #item="{ element, index }">
                         <div class="list-group-item">
-                            <div class="card-header">{{ element.name }}</div>
+                            <div class="card-header">
+                                <span>{{ element.name }}</span>
+                                <span>{{ element.estimation }}</span>
+                            </div>
                             <p class="card-text">
                                 {{ element.description }}
                             </p>
                             <div class="card-data">
-                                <span>
-                                    Assigned to: User
-                                </span>
+                                <div>
+                                    <span>
+                                        Assigned to:
+                                    </span>
+                                    <select>
+                                        <option value="0">Nikita</option>
+                                        <option value="1">Dima</option>
+                                        <option value="2">Andrii</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>Status: {{ element.status }}</div>
-                            <div>Order: {{ element.order }}</div>
                         </div>
                     </template>
                 </draggable>
@@ -135,7 +180,9 @@ export default {
             inprogress: [],
             tests: [],
             done: [],
-            tickets: []
+            tickets: [],
+            currentSprint: {},
+            currentProject: {}
         }
     },
     methods: {
@@ -158,56 +205,58 @@ export default {
             }
 
             for (let ticket of this[status]) {
-                api.post('api/ticket/update', ticket )
+                api.post('/api/tickets/update', ticket )
                     .then(response => {
                         //
                     });
             }
         },
-        logout () {
-            localStorage.setItem('access_token', '');
-            this.$store.state.authorized = false;
-            router.push('/login');
-        },
-        getAccessToken(){
-            if(localStorage.getItem('access_token')) {
-                this.$store.state.authorized = true;
-            } else {
-                this.$store.state.authorized = false;
-            }
-        },
-        getUserData() {
-            if (localStorage.getItem('access_token')) {
-                api.get('api/user/auth')
-                    .then( response => {
-                        this.name = response.data.User.name;
-                    })
-            }
-        },
-        showCurrentProject(sprint_id) {
-            api.post('api/ticket/index-sprint', { id: sprint_id })
+        showCurrentProject(id) {
+            api.get(`/api/sprints/${id}/tickets`)
                 .then(response => {
                     this.tickets = response.data.Tickets;
-                    console.log(this.tickets);
+                    console.log(response.data.Tickets);
                 });
         },
 
         tasksFilter(type) {
             return this.tickets.filter(item => item.status === type);
+        },
+        sumAllEstimation(array) {
+            return array.reduce((accumulator, currentObject) => {
+                return accumulator + currentObject.estimation;
+            }, 0);
+        },
+        showSprint(id) {
+            api.post('/api/sprints/show', { id: id })
+                .then(response => {
+                    this.currentSprint = response.data.Sprint;
+                    this.showProject(this.currentSprint.project_id);
+                });
+        },
+        showProject(id) {
+            api.post('/api/projects/show', { id: id })
+                .then(response => {
+                    this.currentProject = response.data.Project;
+                });
+        },
+        parseDate(string) {
+            const date = new Date(string);
+            return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         }
     },
     mounted() {
         this.showCurrentProject(this.$route.params.id);
-
         setTimeout(()=>{
             this.todo = this.tasksFilter('todo');
             this.inprogress = this.tasksFilter('inprogress');
             this.tests = this.tasksFilter('tests');
             this.done = this.tasksFilter('done');
         }, 500);
+        this.showSprint(this.$route.params.id);
     },
     updated() {
-        // this.getUserData();
+
     }
 }
 </script>
@@ -272,7 +321,6 @@ export default {
 }
 .list-group-item {
     cursor: grab;
-    //margin: 10px;
     border-radius: 10px;
     padding: 18px;
     background-color: white;
@@ -284,10 +332,6 @@ export default {
     border-radius: 10px;
     padding: 10px;
     background: rgb(244, 244, 244);
-    //background: -moz-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    //background: -webkit-linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    //background: linear-gradient(313deg, rgba(226,0,255,1) 0%, rgba(0,245,255,1) 100%);
-    //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e200ff",endColorstr="#00f5ff",GradientType=1);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -295,6 +339,11 @@ export default {
 .card-header {
     font-weight: 600;
     margin-bottom: 12px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: start;
+    justify-content: space-between;
 }
 .card-text {
     line-height: 18px;
@@ -306,10 +355,22 @@ export default {
     flex-direction: row;
     align-items: end;
 }
-.card-data span {
+.card-data div {
     width: 100%;
     text-align: end;
     color: grey;
+}
+
+.card-data select {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: grey;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-weight: 700;
 }
 .logout {
     cursor: pointer;
@@ -319,9 +380,29 @@ export default {
     font-size: 24px;
 }
 
-.info_team {
+.info_estimation {
     font-size: 16px;
     margin-top: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card_header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.card_header h2 {
+    margin-bottom: 0;
+}
+
+.card_header span {
+    font-weight: 600;
+    margin-right: 12px;
 }
 
 </style>
