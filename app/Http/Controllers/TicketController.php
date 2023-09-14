@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTicketRequest;
+use App\Models\User;
 use App\Services\TicketService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class TicketController extends Controller
@@ -44,6 +46,13 @@ class TicketController extends Controller
 
     public function destroy(Request $request){
         $this->ticketService->delete($request->id);
+    }
+
+    public function ticketsByUser(){
+        $tickets = $this->ticketService->ticketsByUser(Auth::id());
+        return response()->json([
+            'Tickets' => $tickets,
+        ]);
     }
 
 /*    public function assignUser(Request $request){

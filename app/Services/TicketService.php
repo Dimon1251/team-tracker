@@ -44,4 +44,8 @@ class TicketService
         return $this->ticketRepository->allBySprint($id);
     }
 
+    public function ticketsByUser($id){
+        return $this->ticketRepository->ticketsByUser($id);
+    }
+
 }
