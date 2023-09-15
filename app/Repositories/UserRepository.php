@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
 
@@ -21,7 +22,18 @@ class UserRepository extends Repository
 
     public function removeFromTeam($user_id, $team_id){
         Team::where('id', $team_id)->first()->users()->detach($user_id);
-
     }
 
+    public function usersByProject($id){
+        $teams = Project::find($id)->teams;
+        $users = [];
+        foreach ($teams as $team){
+            $userData = [
+                'team' => $team->name,
+                'users' => $team->users,
+            ];
+            $users[] = $userData;
+        }
+        return $users;
+    }
 }

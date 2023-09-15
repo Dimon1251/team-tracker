@@ -25,7 +25,7 @@ class CreateTicketRequest extends FormRequest
             'name' => 'required|max:20',
             'sprint_id' => 'required|integer',
             'estimation' => 'required|integer',
-            'description' => 'max:256',
+            'description' => 'max:4000',
         ];
     }
 }
