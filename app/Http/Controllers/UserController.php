@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,11 +43,16 @@ class UserController extends Controller
     }
 
     public function selfUser(){
-        Log::info(Auth::id());
-
         $user = $this->userService->find(Auth::id());
         return response()->json([
             'User' => $user,
+        ]);
+    }
+
+    public function usersByProject($id){
+        $users = $this->userService->usersByProject($id);
+        return response()->json([
+            'Users' => $users,
         ]);
     }
 }

@@ -45,4 +45,8 @@ class UserService
         $this->userRepository->removeFromTeam($user_id, $team_id);
     }
 
+    public function usersByProject($id){
+        return $this->userRepository->usersByProject($id);
+    }
+
 }
