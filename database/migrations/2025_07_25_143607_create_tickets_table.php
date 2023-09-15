@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('description');
             $table->integer('estimation');
             $table->string('status')->default('todo');
-            $table->integer('order')->default(50);
+            $table->integer('order')->default(9999);
 
             $table->unsignedBigInteger('sprint_id')->nullable();
             $table->foreign('sprint_id')->references('id')->on('sprints')->onDelete('cascade');
