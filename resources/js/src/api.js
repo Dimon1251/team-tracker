@@ -9,7 +9,6 @@ api.interceptors.request.use( config => {
     }
     return config
 }, error => {
-
 });
 
 api.interceptors.response.use( config => {
@@ -18,8 +17,7 @@ api.interceptors.response.use( config => {
     }
     return config
 }, error => {
-    console.log(error)
-    // if (error.response.data.detail === 'Token expired') {
+    if (error.response.status === 401) {
     //     return axios.get('http://46.150.0.33:5050/api/refresh_token', {
     //         headers: {
     //             'authorization' : `Bearer ${localStorage.getItem('refresh_token')}`
@@ -42,9 +40,9 @@ api.interceptors.response.use( config => {
     //         }
     //     });
     // } else {
-    //     store.state.authorized = false;
-    //     localStorage.setItem('access_token', '');
-    // }
+        localStorage.setItem('access_token', '');
+        this.$store.state.authorized = false;
+    }
 });
 
 export default api;

@@ -15,7 +15,7 @@ router.beforeEach( (to, from, next) => {
             })
         }
     }
-    if ((to.name === 'projects' || to.name === 'settings' || to.name === 'board') && !accessToken) {
+    if ((to.name === 'projects' || to.name === 'settings' || to.name === 'board' || to.name === 'tasks') && !accessToken) {
         return next({
             name: 'login'
         })
