@@ -39,10 +39,8 @@
                                     <span>
                                         Assigned to:
                                     </span>
-                                    <select>
-                                        <option value="0">Nikita</option>
-                                        <option value="1">Dima</option>
-                                        <option value="2">Andrii</option>
+                                    <select v-model="element.assigned_user_id" @change="updateTicket(element)">
+                                        <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -76,10 +74,8 @@
                                     <span>
                                         Assigned to:
                                     </span>
-                                    <select>
-                                        <option value="0">Nikita</option>
-                                        <option value="1">Dima</option>
-                                        <option value="2">Andrii</option>
+                                    <select v-model="element.assigned_user_id" @change="updateTicket(element)">
+                                        <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -113,10 +109,8 @@
                                     <span>
                                         Assigned to:
                                     </span>
-                                    <select>
-                                        <option value="0">Nikita</option>
-                                        <option value="1">Dima</option>
-                                        <option value="2">Andrii</option>
+                                    <select v-model="element.assigned_user_id" @change="updateTicket(element)">
+                                        <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -150,10 +144,8 @@
                                     <span>
                                         Assigned to:
                                     </span>
-                                    <select>
-                                        <option value="0">Nikita</option>
-                                        <option value="1">Dima</option>
-                                        <option value="2">Andrii</option>
+                                    <select v-model="element.assigned_user_id" @change="updateTicket(element)">
+                                        <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -182,7 +174,8 @@ export default {
             done: [],
             tickets: [],
             currentSprint: {},
-            currentProject: {}
+            currentProject: {},
+            users: []
         }
     },
     methods: {
@@ -198,24 +191,30 @@ export default {
             };
         },
         updateTickets(status) {
-            console.log(this[status]);
             for (let i = 0; i<this[status].length; i++) {
                 this[status][i].status = status;
                 this[status][i].order = i;
             }
-
+            let arr = [];
             for (let ticket of this[status]) {
-                api.post('/api/tickets/update', ticket )
-                    .then(response => {
-                        //
-                    });
+                arr.push(ticket);
             }
+
+            api.post('/api/tickets/update', arr )
+                .then(response => {
+                    //
+                });
+        },
+        updateTicket(ticket) {
+            api.post('/api/tickets/update', [ticket] )
+                .then(response => {
+                    //
+                });
         },
         showCurrentProject(id) {
             api.get(`/api/sprints/${id}/tickets`)
                 .then(response => {
                     this.tickets = response.data.Tickets;
-                    console.log(response.data.Tickets);
                 });
         },
 
@@ -238,12 +237,35 @@ export default {
             api.post('/api/projects/show', { id: id })
                 .then(response => {
                     this.currentProject = response.data.Project;
+                    this.getUsersOfProject(this.currentProject.id)
                 });
         },
         parseDate(string) {
             const date = new Date(string);
-            return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-        }
+            let day = date.getDate();
+            if (day < 10) {
+                day = '0' + String(day);
+            }
+            let month = date.getMonth() + 1;
+            if (month < 10) {
+                month = '0' + String(month);
+            }
+            let year = date.getFullYear();
+
+            return `${day}.${month}.${year}`;
+        },
+        getUsersOfProject(project_id) {
+            api.get(`/api/projects/${project_id}/users`)
+                .then(response => {
+                    for (let team of response.data.Users) {;
+                        for(let user of team.users) {
+                            if(!this.users.includes(user)) {
+                                this.users.push(user)
+                            }
+                        }
+                    }
+                });
+        },
     },
     mounted() {
         this.showCurrentProject(this.$route.params.id);
@@ -254,155 +276,14 @@ export default {
             this.done = this.tasksFilter('done');
         }, 500);
         this.showSprint(this.$route.params.id);
+
     },
     updated() {
-
     }
 }
 </script>
 
 <style>
-.header {
-    height: 72px;
-    width: 100%;
-    background-color: white;
-    padding: 20px;
-    display: flex;
-    flex-direction: row;
-}
-.buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    font-size: 18px;
-    margin-left: 20px;
-    line-height: 24px;
-}
-.nav ul, .user {
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
-}
-.nav ul li {
-    cursor: pointer;
-}
-.logo {
-    font-size: 24px;
-    font-weight: 600;
-    height: 32px;
-    padding-top: 3px;
-    user-select: none;
-}
-.name {
-    color: grey;
-    margin-right: 20px;
-}
-.info {
-    padding: 12px 12px 0;
-}
-.board {
-    padding: 12px;
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-    width: 100%;
-}
-.block {
-    padding: 20px 10px 10px;
-    background-color: white;
-    border-radius: 20px;
-    flex-grow: 1;
-    width: calc((100% - 36px) / 4);
-}
-.block h2 {
-    margin-left: 12px;
-}
-.list-group-item {
-    cursor: grab;
-    border-radius: 10px;
-    padding: 18px;
-    background-color: white;
-}
-.list-group {
-    margin-top: 9px;
-    width: 100%;
-    height: calc(100% - 26px);
-    border-radius: 10px;
-    padding: 10px;
-    background: rgb(244, 244, 244);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.card-header {
-    font-weight: 600;
-    margin-bottom: 12px;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: start;
-    justify-content: space-between;
-}
-.card-text {
-    line-height: 18px;
-}
-.card-data {
-    width: 100%;
-    margin-top: 12px;
-    display: flex;
-    flex-direction: row;
-    align-items: end;
-}
-.card-data div {
-    width: 100%;
-    text-align: end;
-    color: grey;
-}
 
-.card-data select {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    font-size: 14px;
-    color: grey;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    font-weight: 700;
-}
-.logout {
-    cursor: pointer;
-}
-
-.info_project {
-    font-size: 24px;
-}
-
-.info_estimation {
-    font-size: 16px;
-    margin-top: 12px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.card_header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-}
-.card_header h2 {
-    margin-bottom: 0;
-}
-
-.card_header span {
-    font-weight: 600;
-    margin-right: 12px;
-}
 
 </style>
