@@ -14,8 +14,8 @@
 ### Firstly you need to clone the project and do some basic setup of the .env file:
 
 ```sh
-git clone git@github.com:Corp-Soft/ebay2web.git
-cd ebay2web
+git clone git@github.com:Dimon1251/team-tracker.git
+cd team-tracker
 cp .env.example .env
 ```
 
