@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
 
@@ -20,6 +21,10 @@ class TeamRepository extends Repository
         return User::whereDoesntHave('teams', function ($query) use ($id) {
             $query->where('team_id', $id);
         })->get();
+    }
+
+    public function teamsByProject($id){
+        return Project::find($id)->teams;
     }
 
 }

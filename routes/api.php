@@ -52,6 +52,7 @@ Route::middleware('jwt.auth')->group(function () {
         Route::post('/update', [ProjectController::class, 'update'])->name('update');
         Route::post('/destroy', [ProjectController::class, 'destroy'])->name('destroy');
         Route::get('/{id}/users', [UserController::class, 'usersByProject'])->name('users'); //ready
+        Route::get('/{id}/teams', [TeamController::class, 'teamsByProject'])->name('teams'); //ready
 
     });
 

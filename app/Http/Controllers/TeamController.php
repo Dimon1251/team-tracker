@@ -34,6 +34,13 @@ class TeamController extends Controller
         ]);
     }
 
+    public function teamsByProject($id){
+        $teams = $this->teamService->teamsByProject($id);
+        return response()->json([
+            'Teams' => $teams,
+        ]);
+    }
+
     public function create(CreateTeamRequest $request){
         $this->teamService->create($request->validated());
     }

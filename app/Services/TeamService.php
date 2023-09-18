@@ -33,6 +33,10 @@ class TeamService
         return $this->teamRepository->usersNotInTeam($id);
     }
 
+    public function teamsByProject($id){
+        return $this->teamRepository->teamsByProject($id);
+    }
+
     public function find($id){
         return $this->teamRepository->one($id);
     }
