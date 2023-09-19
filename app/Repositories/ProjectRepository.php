@@ -25,4 +25,12 @@ class ProjectRepository extends Repository
         return $uniqueElements->all();
     }
 
+    public function addTeam($id, $team_id){
+        Project::find($id)->teams()->attach($team_id);
+    }
+
+    public function removeTeam($id, $team_id){
+        Project::find($id)->teams()->deatach($team_id);
+    }
+
 }

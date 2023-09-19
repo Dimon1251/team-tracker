@@ -39,4 +39,12 @@ class ProjectService
         $this->projectRepository->delete($id);
     }
 
+    public function addTeam($id, $team_id){
+        $this->projectRepository->addTeam($id, $team_id);
+    }
+
+    public function removeTeam($id, $team_id){
+        $this->projectRepository->removeTeam($id, $team_id);
+    }
+
 }

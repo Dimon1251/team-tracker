@@ -54,6 +54,9 @@ Route::middleware('jwt.auth')->group(function () {
         Route::get('/{id}/users', [UserController::class, 'usersByProject'])->name('users'); //ready
         Route::get('/{id}/teams', [TeamController::class, 'teamsByProject'])->name('teams'); //ready
 
+        Route::get('/{id}/add-team/{team_id}', [ProjectController::class, 'addTeam']); //ready
+        Route::get('/{id}/remove-team/{team_id}', [ProjectController::class, 'removeTeam']); //ready
+
     });
 
     Route::prefix('/sprints')->name('sprints.')->group(function () {

@@ -35,4 +35,12 @@ class ProjectController extends Controller
     public function destroy(Request $request){
         $this->projectService->delete($request->id);
     }
+
+    public function addTeam($id, $team_id){
+        $this->projectService->addTeam($id, $team_id);
+    }
+
+    public function removeTeam($id, $team_id){
+        $this->projectService->removeTeam($id, $team_id);
+    }
 }
