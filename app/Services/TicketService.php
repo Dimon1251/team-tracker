@@ -36,9 +36,6 @@ class TicketService
         $this->ticketRepository->delete($id);
     }
 
- /*   public function assignUser($ticket_id, $assign, $assigned){
-        $this->ticketRepository->assignUser($ticket_id, $assign, $assigned);
-    }*/
 
     public function allBySprint($id){
         return $this->ticketRepository->allBySprint($id);

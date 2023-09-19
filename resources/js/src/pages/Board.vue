@@ -227,14 +227,14 @@ export default {
             }, 0);
         },
         showSprint(id) {
-            api.post('/api/sprints/show', { id: id })
+            api.get(`/api/sprints/${id}/show`)
                 .then(response => {
                     this.currentSprint = response.data.Sprint;
                     this.showProject(this.currentSprint.project_id);
                 });
         },
         showProject(id) {
-            api.post('/api/projects/show', { id: id })
+            api.get(`/api/projects/${id}/show`)
                 .then(response => {
                     this.currentProject = response.data.Project;
                     this.getUsersOfProject(this.currentProject.id)

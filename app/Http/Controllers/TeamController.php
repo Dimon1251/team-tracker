@@ -20,12 +20,12 @@ class TeamController extends Controller
         ]);
     }
 
-  /*  public function show(Request $request){
-        $team = $this->teamService->find($request->id);
+    public function show($id){
+        $team = $this->teamService->find($id);
         return response()->json([
             'Team' => $team,
         ]);
-    }*/
+    }
 
     public function usersByTeams($id){
         $users = $this->teamService->usersByTeams($id);

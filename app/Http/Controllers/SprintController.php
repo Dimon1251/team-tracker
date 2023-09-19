@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSprintRequest;
+use App\Http\Requests\UpdateSprintRequest;
 use App\Services\SprintService;
 use App\Services\TicketService;
 use Illuminate\Http\Request;
@@ -18,8 +19,8 @@ class SprintController extends Controller
         ]);
     }
 
-    public function show(Request $request){
-        $sprint = $this->sprintService->find($request->id);
+    public function show($id){
+        $sprint = $this->sprintService->find($id);
         return response()->json([
             'Sprint' => $sprint,
         ]);
@@ -29,11 +30,11 @@ class SprintController extends Controller
         $this->sprintService->create($request->validated());
     }
 
-    public function update(Request $request){
-        $this->sprintService->update($request->toArray(), $request->id);
+    public function update(UpdateSprintRequest $request, $id){
+        $this->sprintService->update($request->validated(), $id);
     }
 
-    public function destroy(Request $request){
-        $this->sprintService->delete($request->id);
+    public function destroy($id){
+        $this->sprintService->delete($id);
     }
 }

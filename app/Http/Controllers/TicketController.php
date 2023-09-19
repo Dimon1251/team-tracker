@@ -27,8 +27,8 @@ class TicketController extends Controller
         ]);
     }
 
-    public function show(Request $request){
-        $ticket = $this->ticketService->find($request->id);
+    public function show($id){
+        $ticket = $this->ticketService->find($id);
         return response()->json([
             'Ticket' => $ticket,
         ]);
@@ -44,8 +44,8 @@ class TicketController extends Controller
         }
     }
 
-    public function destroy(Request $request){
-        $this->ticketService->delete($request->id);
+    public function destroy($id){
+        $this->ticketService->delete($id);
     }
 
     public function ticketsByUser(){
@@ -54,8 +54,4 @@ class TicketController extends Controller
             'Tickets' => $tickets,
         ]);
     }
-
-/*    public function assignUser(Request $request){
-        $this->ticketService->assignUser($request->ticket_id,$request->user_id_assign, $request->user_id_assigned);
-    }*/
 }

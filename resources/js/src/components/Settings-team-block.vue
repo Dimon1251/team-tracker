@@ -66,7 +66,7 @@ export default {
 
         },
         deleteTeam(id) {
-            api.get(`api/teams/${id}/delete`)
+            api.get(`api/teams/${id}/destroy`)
                 .then(response => {
                     //
                 });

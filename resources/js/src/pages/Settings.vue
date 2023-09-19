@@ -397,14 +397,15 @@ export default {
             }
         },
         deleteProject(id) {
-            api.post('api/projects/destroy', { id: id })
+            api.get(`api/projects/${id}/destroy`)
                 .then(response => {
                     //
                 });
             this.showAllProjects();
         },
         updateProject(project) {
-            api.post('api/projects/update', project )
+            console.log(project);
+            api.post(`api/projects/${project.id}/update`, {name: project.name} )
                 .then(response => {
                     //
                 });
@@ -414,14 +415,14 @@ export default {
             return this.teams.find(item => item.id === id).name;
         },
         updateSprint(sprint) {
-            api.post('api/sprints/update', sprint )
+            api.post(`api/sprints/${sprint.id}/update`, sprint )
                 .then(response => {
                     //
                 });
             this.showAllProjects();
         },
         deleteSprint(id) {
-            api.post('api/sprints/destroy', { id: id })
+            api.get(`api/sprints/${id}/destroy` )
                 .then(response => {
                     //
                 });
@@ -435,7 +436,7 @@ export default {
             this.getTickets();
         },
         deleteTicket(id) {
-            api.post('api/tickets/destroy', { id: id })
+            api.get(`api/tickets/${id}/destroy`)
                 .then(response => {
                     //
                 });

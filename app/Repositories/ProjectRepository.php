@@ -19,9 +19,9 @@ class ProjectRepository extends Repository
             $projects[] = $team->projects;
         }
         $uniqueElements = collect($projects)
-            ->flatten() // Преобразовать в одномерный массив
-            ->unique('id')   // Удалить повторяющиеся элементы
-            ->values();   // Переиндексировать массив
+            ->flatten()
+            ->unique('id')
+            ->values();
         return $uniqueElements->all();
     }
 

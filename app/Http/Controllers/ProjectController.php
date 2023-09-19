@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,8 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function show(Request $request){
-        $project = $this->projectService->find($request->id);
+    public function show($id){
+        $project = $this->projectService->find($id);
         return response()->json([
             'Project' => $project,
         ]);
@@ -28,12 +29,12 @@ class ProjectController extends Controller
         $this->projectService->create($request->validated());
     }
 
-    public function update(Request $request){
-        $this->projectService->update($request->toArray(), $request->id);
+    public function update(UpdateProjectRequest $request, $id){
+        $this->projectService->update($request->validated(), $id);
     }
 
-    public function destroy(Request $request){
-        $this->projectService->delete($request->id);
+    public function destroy($id){
+        $this->projectService->delete($id);
     }
 
     public function addTeam($id, $team_id){

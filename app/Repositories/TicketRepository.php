@@ -13,12 +13,6 @@ class TicketRepository extends Repository
         parent::__construct($model);
     }
 
- /*   public function assignUser($ticket_id, $assign, $assigned){
-        Ticket::where('id', $ticket_id)->update([
-            'assignee_user_id' => $assign,
-            'assigned_user_id' => $assigned
-        ]);
-    }*/
 
     public function allBySprint($id){
         return Sprint::where('id', $id)->first()->tickets;
