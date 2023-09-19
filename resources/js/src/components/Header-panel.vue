@@ -48,13 +48,13 @@ export default {
       this.$store.state.authorized = false;
       router.push('/login');
     },
-    getAccessToken() {
-      if(localStorage.getItem('access_token')) {
-        this.$store.state.authorized = true;
-      } else {
-        this.$store.state.authorized = false;
-      }
-    },
+    // getAccessToken() {
+    //   if(localStorage.getItem('access_token')) {
+    //     this.$store.state.authorized = true;
+    //   } else {
+    //     this.$store.state.authorized = false;
+    //   }
+    // },
     getUserData() {
       if (localStorage.getItem('access_token')) {
             api.get('/api/users/auth')

@@ -66,18 +66,41 @@
                     </div>
                     <div class="projects_list">
                         <span class="label">Projects:</span>
-                        <div v-for="project of projects" class="project_item">
-                            <input class="new_project_input" type="text" v-model="project.name" />
-                            <button class="button" @click="updateProject(project)">
-                                <div>
-                                    Update
+                        <div class="sprints_of_projects_area">
+                            <div v-for="project of projects" class="project_item">
+                                <span class="label">Project name:</span>
+                                <div class="project_buttons">
+                                    <input class="new_project_input" type="text" v-model="project.name" />
+                                    <button class="button" @click="updateProject(project)">
+                                        <div>
+                                            Update
+                                        </div>
+                                    </button>
+                                    <button class="button" @click="deleteProject(project.id)">
+                                        <div>
+                                            Delete
+                                        </div>
+                                    </button>
                                 </div>
-                            </button>
-                            <button class="button" @click="deleteProject(project.id)">
-                                <div>
-                                    Delete
+                                <div class="add_team">
+                                    <select v-model="project.newTeamId" class="form_input_settings">
+                                        <option v-for="team in teams" :key="team.id" :value="team.id">{{ team.name }}</option>
+                                    </select>
+                                    <button class="button" @click="addTeamInExistingProject(project.id, project.newTeamId)">
+                                        <div>
+                                            Add
+                                        </div>
+                                    </button>
                                 </div>
-                            </button>
+
+                                <span class="label">Assigned teams:</span>
+                                <div v-for="team of project.teams" class="team_list">
+                                    <div>{{ team.name }}</div>
+                                    <div class="x-btn" @click="deleteTeamFromProject(project, team)">
+                                        x
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -293,7 +316,37 @@ export default {
         showAllProjects() {
             api.get('api/projects/index' )
             .then(response => {
-                this.projects = response.data.Projects;
+                let projects = response.data.Projects;
+
+                for (let project of projects) {
+                    for (let sprint of project.sprints) {
+                        let startDate = new Date(sprint.start_date)
+                        let startYear = startDate.getFullYear();
+                        let startMonth = startDate.getMonth() + 1;
+                        if (startMonth < 10) {
+                            startMonth = `0${startMonth}`
+                        }
+                        let startDay = startDate.getDate();
+                        if (startDay < 10) {
+                            startDay = `0${startDay}`
+                        }
+                        sprint.start_date = `${startYear}-${startMonth}-${startDay}`;
+                        let endDate = new Date(sprint.end_date)
+                        let endYear = endDate.getFullYear();
+                        let endMonth = endDate.getMonth() + 1;
+                        if (endMonth < 10) {
+                            endMonth = `0${endMonth}`
+                        }
+                        let endDay = endDate.getDate();
+                        if (endDay < 10) {
+                            endDay = `0${endDay}`
+                        }
+                        sprint.end_date = `${endYear}-${endMonth}-${endDay}`;
+                    }
+                }
+                this.projects = projects;
+                this.setTeamsOfProject();
+                console.log(this.projects);
             });
         },
         showCurrentProject(sprint_id) {
@@ -392,6 +445,33 @@ export default {
             let index = this.newTeamList.indexOf(team);
             this.newTeamList.splice(index, 1);
         },
+        getTeamsOfProject(project_id, i) {
+            api.get(`api/projects/${project_id}/teams`)
+                .then(response => {
+                    this.projects[i].teams = response.data.Teams;
+                });
+        },
+        setTeamsOfProject() {
+            for (let i = 0; i < this.projects.length; i++) {
+                this.getTeamsOfProject(this.projects[i].id, i);
+            }
+        },
+        deleteTeamFromProject(project, team) {
+            api.get(`api/projects/${project.id}/remove-team/${team.id}`)
+                .then(response => {
+                    //
+                });
+
+            this.showAllProjects();
+        },
+        addTeamInExistingProject(project_id, team_id) {
+            api.get(`api/projects/${project_id}/add-team/${team_id}`)
+                .then(response => {
+                    //
+                });
+
+            this.showAllProjects();
+        }
     },
     mounted() {
         this.showAllTeams();
@@ -404,7 +484,5 @@ export default {
 </script>
 
 <style>
-
-
 
 </style>

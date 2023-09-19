@@ -26,11 +26,14 @@ class ProjectRepository extends Repository
     }
 
     public function addTeam($id, $team_id){
-        Project::find($id)->teams()->attach($team_id);
+        $project = Project::find($id);
+        if (!$project->teams->contains($team_id)) {
+            $project->teams()->attach($team_id);
+        }
     }
 
     public function removeTeam($id, $team_id){
-        Project::find($id)->teams()->deatach($team_id);
+        Project::find($id)->teams()->detach($team_id);
     }
 
 }

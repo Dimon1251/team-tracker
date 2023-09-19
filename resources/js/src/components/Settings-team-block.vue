@@ -2,7 +2,7 @@
     <div class="teams_card">
         <div class="teams_card_inputs">
             <div class="teams_card_inputs_team">
-                <span class="label">Enter team name:</span>
+                <span class="label">Team name:</span>
                 <input class="form_input_settings" type="text" v-model="team.name" />
                 <button class="button" @click="updateTeam(team)">
                     <div>Update</div>

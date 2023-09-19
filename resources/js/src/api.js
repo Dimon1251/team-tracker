@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from './store';
+import router from "./router/router.js";
 
 const api = axios.create();
 
@@ -17,6 +18,7 @@ api.interceptors.response.use( config => {
     }
     return config
 }, error => {
+    console.log(error)
     if (error.response.status === 401) {
     //     return axios.get('http://46.150.0.33:5050/api/refresh_token', {
     //         headers: {
@@ -42,6 +44,7 @@ api.interceptors.response.use( config => {
     // } else {
         localStorage.setItem('access_token', '');
         this.$store.state.authorized = false;
+        router.push('/login');
     }
 });
 

@@ -468,6 +468,8 @@ h2 {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    font-size: 16px;
+    padding: 6px;
 }
 
 .x-btn {
@@ -476,10 +478,19 @@ h2 {
 
 .project_item {
     display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.project_buttons {
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 .project_item button {
@@ -662,6 +673,10 @@ h2 {
     gap: 10px;
 }
 
+.sprints_of_projects_area button {
+    margin: 0 !important;
+}
+
 .ticket_name {
     width: 25%;
 }
@@ -671,4 +686,15 @@ h2 {
 .ticket_status {
     width: 25%;
     text-align: end;
+}
+
+.add_team {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.add_team select {
+    flex-grow: 1;
 }
